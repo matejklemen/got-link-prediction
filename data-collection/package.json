@@ -1,0 +1,16 @@
+{
+  "name": "data-collection",
+  "version": "1.0.0",
+  "description": "",
+  "main": "data_collector.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ky": "^0.10.0",
+    "ky-universal": "^0.2.0",
+    "range": "0.0.3"
+  }
+}
