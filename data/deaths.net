@@ -1,0 +1,458 @@
+*vertices 262
+1 "a member of the Sons of the Harpy" 0.0 0.0 ellipse
+2 "White Rat" 0.0 0.0 ellipse
+3 "Jon Snow" 0.0 0.0 ellipse
+4 "Mance Rayder" 0.0 0.0 ellipse
+5 Mossador 0.0 0.0 ellipse
+6 "Son of Harpy" 0.0 0.0 ellipse
+7 "Daario Naharis" 0.0 0.0 ellipse
+8 "Janos Slynt" 0.0 0.0 ellipse
+9 Bronn 0.0 0.0 ellipse
+10 "Lead Dornish guard" 0.0 0.0 ellipse
+11 "Obara Sand" 0.0 0.0 ellipse
+12 "Merchant captain" 0.0 0.0 ellipse
+13 "Sons of Harpy" 0.0 0.0 ellipse
+14 "Ser Barristan Selmy" 0.0 0.0 ellipse
+15 Daenerys 0.0 0.0 ellipse
+16 "Great Master" 0.0 0.0 ellipse
+17 "Arya Stark" 0.0 0.0 ellipse
+18 Ghita 0.0 0.0 ellipse
+19 "natural death" 0.0 0.0 ellipse
+20 "Maester Aemon" 0.0 0.0 ellipse
+21 "Ramsay Bolton" 0.0 0.0 ellipse
+22 "Old Woman" 0.0 0.0 ellipse
+23 Tormund 0.0 0.0 ellipse
+24 "Lord of Bones" 0.0 0.0 ellipse
+25 "White Walker" 0.0 0.0 ellipse
+26 Loboda 0.0 0.0 ellipse
+27 "a pack of child-wights" 0.0 0.0 ellipse
+28 Karsi 0.0 0.0 ellipse
+29 Melisandre 0.0 0.0 ellipse
+30 "Shireen Baratheon" 0.0 0.0 ellipse
+31 "son of Harpy" 0.0 0.0 ellipse
+32 "Hizdahr zo Loraq" 0.0 0.0 ellipse
+33 hanging 0.0 0.0 ellipse
+34 "Selyse Baratheon" 0.0 0.0 ellipse
+35 "Brienne of Tarth" 0.0 0.0 ellipse
+36 "Stannis Baratheon" 0.0 0.0 ellipse
+37 "Theon Greyjoy" 0.0 0.0 ellipse
+38 Myranda 0.0 0.0 ellipse
+39 "Meryn Trant" 0.0 0.0 ellipse
+40 "Ellaria Sand" 0.0 0.0 ellipse
+41 "Myrcella Baratheon" 0.0 0.0 ellipse
+42 "Black brothers (Later Resurrected)" 0.0 0.0 ellipse
+43 "Bolton officer" 0.0 0.0 ellipse
+44 "Tyene Sand" 0.0 0.0 ellipse
+45 "Areo Hotah" 0.0 0.0 ellipse
+46 "Doran Martell" 0.0 0.0 ellipse
+47 "Maester Caleotte" 0.0 0.0 ellipse
+48 "Trystane Martell" 0.0 0.0 ellipse
+49 "The Mountain" 0.0 0.0 ellipse
+50 "King's Landing boaster" 0.0 0.0 ellipse
+51 "Roose Bolton" 0.0 0.0 ellipse
+52 "Walda Bolton" 0.0 0.0 ellipse
+53 "Newborn Bolton" 0.0 0.0 ellipse
+54 "Euron Greyjoy" 0.0 0.0 ellipse
+55 "Balon Greyjoy" 0.0 0.0 ellipse
+56 "Ned Stark" 0.0 0.0 ellipse
+57 "Gerold Hightower" 0.0 0.0 ellipse
+58 "Arthur Dayne" 0.0 0.0 ellipse
+59 "Bowen Marsh" 0.0 0.0 ellipse
+60 "Othell Yarwyck" 0.0 0.0 ellipse
+61 "Alliser Thorne" 0.0 0.0 ellipse
+62 Olly 0.0 0.0 ellipse
+63 Iggo 0.0 0.0 ellipse
+64 Akho 0.0 0.0 ellipse
+65 Osha 0.0 0.0 ellipse
+66 "Moro and 9 other Khals" 0.0 0.0 ellipse
+67 "Meera Reed" 0.0 0.0 ellipse
+68 "the Night King" 0.0 0.0 ellipse
+69 "Three-eyed raven" 0.0 0.0 ellipse
+70 "activating an explosive device taking out wights" 0.0 0.0 ellipse
+71 Leaf 0.0 0.0 ellipse
+72 wights 0.0 0.0 ellipse
+73 Hodor 0.0 0.0 ellipse
+74 "Jaime Lannister" 0.0 0.0 ellipse
+75 "Aerys Targaryen" 0.0 0.0 ellipse
+76 "rogue members of the Brotherhood Without Banners" 0.0 0.0 ellipse
+77 "Brother Ray" 0.0 0.0 ellipse
+78 "Sandor Clegane" 0.0 0.0 ellipse
+79 Steve 0.0 0.0 ellipse
+80 Riddell 0.0 0.0 ellipse
+81 Morgan 0.0 0.0 ellipse
+82 Gatins 0.0 0.0 ellipse
+83 "Faith Militant" 0.0 0.0 ellipse
+84 "Lannister soldier" 0.0 0.0 ellipse
+85 "Brynden Tully" 0.0 0.0 ellipse
+86 Outlaw1 0.0 0.0 ellipse
+87 "Lem Lemoncloak" 0.0 0.0 ellipse
+88 "Brotherhood Without Banners" 0.0 0.0 ellipse
+89 Outlaw2 0.0 0.0 ellipse
+90 "the Waif" 0.0 0.0 ellipse
+91 "Lady Crane" 0.0 0.0 ellipse
+92 "The Waif" 0.0 0.0 ellipse
+93 "Grey Worm" 0.0 0.0 ellipse
+94 "Belicho Paenymion" 0.0 0.0 ellipse
+95 "Razdal mo Eraz" 0.0 0.0 ellipse
+96 "Rickon Stark" 0.0 0.0 ellipse
+97 "Smalljon Umber" 0.0 0.0 ellipse
+98 "Wun Weg Wun Dar Wun" 0.0 0.0 ellipse
+99 "Ramsay Bolton's dogs" 0.0 0.0 ellipse
+100 kids 0.0 0.0 ellipse
+101 "Grand Maester Pycelle" 0.0 0.0 ellipse
+102 wildfire 0.0 0.0 ellipse
+103 "Lancel Lannister" 0.0 0.0 ellipse
+104 "High Sparrow" 0.0 0.0 ellipse
+105 "Margaery Tyrell" 0.0 0.0 ellipse
+106 "Loras Tyrell" 0.0 0.0 ellipse
+107 "Mace Tyrell" 0.0 0.0 ellipse
+108 "Kevan Lannister" 0.0 0.0 ellipse
+109 "jumping out a window" 0.0 0.0 ellipse
+110 "Tommen Baratheon" 0.0 0.0 ellipse
+111 "Walder Rivers" 0.0 0.0 ellipse
+112 "Lothar Frey" 0.0 0.0 ellipse
+113 "Walder Frey" 0.0 0.0 ellipse
+114 "Waymar Royce" 0.0 0.0 ellipse
+115 Gared 0.0 0.0 ellipse
+116 Will 0.0 0.0 ellipse
+117 Lysa 0.0 0.0 ellipse
+118 "Jon Arryn" 0.0 0.0 ellipse
+119 "Bran's Wolf" 0.0 0.0 ellipse
+120 Assassin 0.0 0.0 ellipse
+121 "the Hound" 0.0 0.0 ellipse
+122 Mycah 0.0 0.0 ellipse
+123 "the Mountain" 0.0 0.0 ellipse
+124 "Ser Hugh" 0.0 0.0 ellipse
+125 "hill tribesmen" 0.0 0.0 ellipse
+126 Kurleket 0.0 0.0 ellipse
+127 "Willis Wode" 0.0 0.0 ellipse
+128 "Lannister guardsmen" 0.0 0.0 ellipse
+129 Wyl 0.0 0.0 ellipse
+130 Heward 0.0 0.0 ellipse
+131 "Jory Cassel" 0.0 0.0 ellipse
+132 "Rob Stark" 0.0 0.0 ellipse
+133 Wallen 0.0 0.0 ellipse
+134 Stiv 0.0 0.0 ellipse
+135 "Vardis Egen" 0.0 0.0 ellipse
+136 "Khal Drogo" 0.0 0.0 ellipse
+137 "Viserys Targaryen" 0.0 0.0 ellipse
+138 "Wine seller" 0.0 0.0 ellipse
+139 "a boar" 0.0 0.0 ellipse
+140 "Robert Baratheon" 0.0 0.0 ellipse
+141 "House Lannister men" 0.0 0.0 ellipse
+142 "Vayon Poole" 0.0 0.0 ellipse
+143 Mordane 0.0 0.0 ellipse
+144 "Syrio Forel" 0.0 0.0 ellipse
+145 Stableboy 0.0 0.0 ellipse
+146 Mago 0.0 0.0 ellipse
+147 Othor 0.0 0.0 ellipse
+148 "Jorah Mormont" 0.0 0.0 ellipse
+149 Qotho 0.0 0.0 ellipse
+150 "Ilyn Payne" 0.0 0.0 ellipse
+151 "Eddard Stark" 0.0 0.0 ellipse
+152 "Mirri Maz Duur" 0.0 0.0 ellipse
+153 lowell 0.0 0.0 ellipse
+154 Polliver 0.0 0.0 ellipse
+155 "Ramsey's Dogs" 0.0 0.0 ellipse
+156 Tansy 0.0 0.0 ellipse
+157 "Axell Florent" 0.0 0.0 ellipse
+158 "Olenna Tyrell" 0.0 0.0 ellipse
+159 "Joffrey Baratheon" 0.0 0.0 ellipse
+160 "Petyr Baelish's men" 0.0 0.0 ellipse
+161 "Dontos Hollar" 0.0 0.0 ellipse
+162 Ygritte 0.0 0.0 ellipse
+163 Guymon 0.0 0.0 ellipse
+164 Styr 0.0 0.0 ellipse
+165 "Olly's Mother" 0.0 0.0 ellipse
+166 "Oznak zo Pahl" 0.0 0.0 ellipse
+167 "uprising slaves" 0.0 0.0 ellipse
+168 Locke 0.0 0.0 ellipse
+169 "Karl Tanner" 0.0 0.0 ellipse
+170 "Jon Snow's wolf" 0.0 0.0 ellipse
+171 Rast 0.0 0.0 ellipse
+172 "Dying Man" 0.0 0.0 ellipse
+173 Biter 0.0 0.0 ellipse
+174 Rorge 0.0 0.0 ellipse
+175 Littlefinger 0.0 0.0 ellipse
+176 "Lysa Arryn" 0.0 0.0 ellipse
+177 "Mole's Town whore" 0.0 0.0 ellipse
+178 "Adrack Humble" 0.0 0.0 ellipse
+179 "Ralf Kenning" 0.0 0.0 ellipse
+180 "Ramsay Snow's men" 0.0 0.0 ellipse
+181 "Oberyn Martell" 0.0 0.0 ellipse
+182 Pypar 0.0 0.0 ellipse
+183 "Samwell Tarly" 0.0 0.0 ellipse
+184 "Thenn warg" 0.0 0.0 ellipse
+185 "Black Brothers" 0.0 0.0 ellipse
+186 Dongo 0.0 0.0 ellipse
+187 accident 0.0 0.0 ellipse
+188 Smitty 0.0 0.0 ellipse
+189 "Grenn and 5 other black brothers" 0.0 0.0 ellipse
+190 "Mag Mar Tun Doh Weg" 0.0 0.0 ellipse
+191 Grenn 0.0 0.0 ellipse
+192 Cooper 0.0 0.0 ellipse
+193 "Donel Hill" 0.0 0.0 ellipse
+194 Zalla 0.0 0.0 ellipse
+195 wight 0.0 0.0 ellipse
+196 "Jojen Reed" 0.0 0.0 ellipse
+197 "Tyrion Lannister" 0.0 0.0 ellipse
+198 Shae 0.0 0.0 ellipse
+199 "Tywin Lannister" 0.0 0.0 ellipse
+200 poison 0.0 0.0 ellipse
+201 "Maester Cressen" 0.0 0.0 ellipse
+202 Barra 0.0 0.0 ellipse
+203 Dothrakis 0.0 0.0 ellipse
+204 Rakharo 0.0 0.0 ellipse
+205 "Amory Lorch" 0.0 0.0 ellipse
+206 Yoren 0.0 0.0 ellipse
+207 Lommy 0.0 0.0 ellipse
+208 "Robb Stark's wolf" 0.0 0.0 ellipse
+209 Rennick 0.0 0.0 ellipse
+210 "The Tickler" 0.0 0.0 ellipse
+211 "Tortured Prisoner" 0.0 0.0 ellipse
+212 "shadow creature" 0.0 0.0 ellipse
+213 "Renly Baratheon" 0.0 0.0 ellipse
+214 "Emmon Cuy" 0.0 0.0 ellipse
+215 "Robar Royce" 0.0 0.0 ellipse
+216 "Jaqen H'ghar" 0.0 0.0 ellipse
+217 "Rodrik Cassel" 0.0 0.0 ellipse
+218 rioters 0.0 0.0 ellipse
+219 "The High Septon" 0.0 0.0 ellipse
+220 "Jagen H'ghar" 0.0 0.0 ellipse
+221 Drennan 0.0 0.0 ellipse
+222 "Xaro Xhoan Daxos" 0.0 0.0 ellipse
+223 Irri 0.0 0.0 ellipse
+224 "Alton Lannister" 0.0 0.0 ellipse
+225 "Torrhen Karstark" 0.0 0.0 ellipse
+226 "Pyat Pree" 0.0 0.0 ellipse
+227 "Eleven of the Thirteen" 0.0 0.0 ellipse
+228 Billy 0.0 0.0 ellipse
+229 Jack 0.0 0.0 ellipse
+230 wildlings 0.0 0.0 ellipse
+231 Stonesnake 0.0 0.0 ellipse
+232 Harker 0.0 0.0 ellipse
+233 Borba 0.0 0.0 ellipse
+234 "Matthos Seaworth" 0.0 0.0 ellipse
+235 Podrik 0.0 0.0 ellipse
+236 "Mandon Moore" 0.0 0.0 ellipse
+237 Tom 0.0 0.0 ellipse
+238 Dagmer 0.0 0.0 ellipse
+239 "Maester Luwin" 0.0 0.0 ellipse
+240 Qhorin 0.0 0.0 ellipse
+241 Doreah 0.0 0.0 ellipse
+242 "Hoster Tully" 0.0 0.0 ellipse
+243 "Ramsay Snow" 0.0 0.0 ellipse
+244 "Master Torturer" 0.0 0.0 ellipse
+245 Bannen 0.0 0.0 ellipse
+246 Craster 0.0 0.0 ellipse
+247 "Jeor Mormont" 0.0 0.0 ellipse
+248 "Kraznys mo Nakloz" 0.0 0.0 ellipse
+249 "Richard Karstark" 0.0 0.0 ellipse
+250 "Willen Lannister" 0.0 0.0 ellipse
+251 "Martyn Lannister" 0.0 0.0 ellipse
+252 "Robb Stark" 0.0 0.0 ellipse
+253 Joffrey 0.0 0.0 ellipse
+254 Ros 0.0 0.0 ellipse
+255 Mero 0.0 0.0 ellipse
+256 "Prendahl na Ghezn" 0.0 0.0 ellipse
+257 "Old Man" 0.0 0.0 ellipse
+258 Orell 0.0 0.0 ellipse
+259 "Talisa Stark" 0.0 0.0 ellipse
+260 "Catelyn Stark" 0.0 0.0 ellipse
+261 "Joyeuse Erenford" 0.0 0.0 ellipse
+262 "Frey Soldier" 0.0 0.0 ellipse
+*arcs
+1 2 1.0
+3 4 1.0
+3 8 1.0
+3 25 1.0
+3 59 1.0
+3 60 1.0
+3 61 1.0
+3 62 1.0
+3 147 1.0
+3 169 1.0
+3 164 1.0
+3 240 1.0
+3 258 1.0
+5 6 1.0
+7 5 1.0
+7 63 1.0
+7 64 1.0
+7 166 1.0
+7 255 1.0
+7 256 1.0
+8 202 1.0
+9 10 1.0
+9 135 1.0
+11 12 1.0
+11 48 1.0
+13 14 1.0
+15 16 1.0
+15 66 1.0
+15 136 1.0
+15 152 1.0
+15 194 1.0
+15 226 1.0
+15 241 1.0
+15 222 1.0
+15 248 1.0
+17 18 1.0
+17 39 1.0
+17 92 1.0
+17 111 1.0
+17 112 1.0
+17 113 1.0
+17 145 1.0
+17 154 1.0
+17 174 1.0
+17 262 1.0
+19 20 1.0
+19 242 1.0
+21 22 1.0
+21 51 1.0
+21 52 1.0
+21 53 1.0
+21 65 1.0
+21 96 1.0
+21 98 1.0
+23 24 1.0
+23 97 1.0
+25 26 1.0
+25 114 1.0
+25 115 1.0
+27 28 1.0
+29 30 1.0
+29 157 1.0
+31 32 1.0
+33 34 1.0
+35 36 1.0
+35 43 1.0
+35 214 1.0
+35 215 1.0
+35 237 1.0
+37 38 1.0
+37 134 1.0
+37 217 1.0
+37 228 1.0
+37 229 1.0
+40 41 1.0
+40 46 1.0
+42 3 1.0
+44 45 1.0
+44 47 1.0
+49 50 1.0
+49 83 1.0
+51 252 1.0
+54 55 1.0
+56 57 1.0
+56 58 1.0
+56 116 1.0
+62 162 1.0
+65 221 1.0
+67 25 1.0
+68 69 1.0
+70 71 1.0
+72 73 1.0
+73 168 1.0
+74 75 1.0
+74 131 1.0
+74 224 1.0
+74 225 1.0
+76 77 1.0
+78 79 1.0
+78 80 1.0
+78 81 1.0
+78 82 1.0
+78 86 1.0
+78 87 1.0
+84 85 1.0
+88 89 1.0
+90 91 1.0
+93 94 1.0
+93 95 1.0
+99 21 1.0
+100 101 1.0
+102 103 1.0
+102 104 1.0
+102 105 1.0
+102 106 1.0
+102 107 1.0
+102 108 1.0
+102 234 1.0
+109 110 1.0
+111 260 1.0
+112 259 1.0
+117 118 1.0
+119 120 1.0
+121 122 1.0
+121 153 1.0
+121 172 1.0
+121 173 1.0
+123 124 1.0
+123 181 1.0
+125 126 1.0
+125 127 1.0
+128 129 1.0
+128 130 1.0
+132 133 1.0
+136 137 1.0
+136 138 1.0
+136 146 1.0
+139 140 1.0
+141 142 1.0
+141 143 1.0
+141 144 1.0
+148 149 1.0
+150 151 1.0
+154 207 1.0
+155 156 1.0
+158 159 1.0
+160 161 1.0
+162 163 1.0
+162 177 1.0
+162 182 1.0
+162 257 1.0
+164 165 1.0
+167 16 1.0
+169 246 1.0
+170 171 1.0
+171 247 1.0
+175 176 1.0
+178 179 1.0
+180 178 1.0
+183 184 1.0
+183 25 1.0
+185 186 1.0
+187 188 1.0
+187 245 1.0
+189 190 1.0
+190 191 1.0
+190 192 1.0
+190 193 1.0
+195 196 1.0
+197 198 1.0
+197 199 1.0
+200 201 1.0
+203 204 1.0
+205 206 1.0
+208 209 1.0
+208 128 1.0
+210 211 1.0
+212 213 1.0
+216 210 1.0
+218 219 1.0
+220 205 1.0
+222 223 1.0
+226 227 1.0
+230 231 1.0
+230 232 1.0
+230 233 1.0
+235 236 1.0
+238 239 1.0
+243 244 1.0
+249 250 1.0
+249 251 1.0
+252 249 1.0
+253 254 1.0
+260 261 1.0
