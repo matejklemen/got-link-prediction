@@ -9,13 +9,13 @@ Merchant captain, Obara Sand, 38:42, undefined, undefined, 1, 44
 Ser Barristan Selmy, Sons of Harpy, 47:46, undefined, undefined, 2, 44
 Great Master, dragon, 4:59, undefined, undefined, 1, 45
 Ghita, Arya , 13:20, undefined, undefined, 1, 46
-Master Aemon, undefined, 9:45, Targaryen, undefined, 2, 47
+Maester Aemon, undefined, 9:45, Targaryen, undefined, 2, 47
 Old Woman, Ramsay Bolton, 13:42, undefined, undefined, 1, 47
 Lord of Bones, Tormund, 32:50, undefined, undefined, 2, 48
 Loboda, White Walker, 50:16, undefined, undefined, 1, 48
 White Walker, Jon Snow, 51:00, undefined, undefined, 1, 48
 Karsi, a pack of child-wights, 52:58, undefined, undefined, 1, 48
-Shrine Baratheon, Melisandre, 32:28, Baratheon, undefined, 2, 49
+Shireen Baratheon, Melisandre, 32:28, Baratheon, undefined, 2, 49
 Hizdahr zo Loraq, son of Harpy, 45:03, undefined, undefined, 2, 49
 Selyse Baratheon, hanging, 3:35, Baratheon, undefined, 2, 50
 Stannis Baratheon, Brienne of Tarth, 15:23, Baratheon, undefined, 3, 50
@@ -26,7 +26,7 @@ Jon Snow, Black brothers (Later Resurrected), 56:20, undefined, undefined, 3, 50
 Bolton officer, Brienne of Tarth, 15:47, undefined, undefined, 1, 51
 Areo Hotah, Tyene Sand, 26:46, undefined, undefined, 2, 51
 Doran Martell, Ellaria Sand, 26:50, Martell, undefined, 2, 51
-Master Caleotte, Tyene Sand, 26:53, undefined, undefined, 1, 51
+Maester Caleotte, Tyene Sand, 26:53, undefined, undefined, 1, 51
 Trystane Martell, Obara Sand, 28:30, Martell, undefined, 2, 51
 King's Landing boaster, The Mountain, 12:24, undefined, undefined, 1, 52
 Roose Bolton, Ramsay Bolton, 31:04, Bolton, undefined, 2, 52
@@ -50,16 +50,16 @@ Leaf, activating an explosive device taking out wights, 52:40, undefined, undefi
 Hodor, wights, 54:26, undefined, undefined, 2, 55
 Aerys Targaryen, Jaime Lannister, 2:49, undefined, flashback, 1, 56
 Maege Mormont, undefined, 23:14, undefined, undefined, 1, 57
-Brother Ray & villagers, rogue members of the Brotherhood Without Banners, 48:13, undefined, undefined, 1, 57
+Brother Ray, rogue members of the Brotherhood Without Banners, 48:13, undefined, undefined, 1, 57
 Steve, Sandor Clegane, 8:24, undefined, undefined, 1, 58
 Riddell, Sandor Clegane, 8:26, undefined, undefined, 1, 58
 Morgan, Sandor Clegane, 8:30, undefined, undefined, 1, 58
 Gatins, Sandor Clegane, 8:33, undefined, undefined, 1, 58
 Faith Militant, The Mountain, 12:51, undefined, undefined, 1, 58
 Brynden Tully, Lannister soldier, 39:39, Tully, undefined, 2, 58
-Outlaw, Sandor Clegane, 44:26, undefined, undefined, 1, 58
+Outlaw1, Sandor Clegane, 44:26, undefined, undefined, 1, 58
 Lem Lemoncloak, Sandor Clegane, 44:31, undefined, undefined, 1, 58
-Outlaw, Brotherhood Without Banners, 44:34, undefined, undefined, 1, 58
+Outlaw2, Brotherhood Without Banners, 44:34, undefined, undefined, 1, 58
 Lady Crane, the Waif , 47:45, undefined, undefined, 2, 58
 The Waif , Arya Stark, 53:37, undefined, undefined, 2, 58
 Belicho Paenymion, Grey Worm, 10:24, undefined, undefined, 1, 59
@@ -116,8 +116,8 @@ Dontos Hollar, Petyr Baelish's men, 4:46, undefined, undefined, 2, 33
 Guymon, Ygritte, 43:40, undefined, undefined, 1, 33
 Olly's Mother, Styr, 43:50, undefined, undefined, 1, 33
 Oznak zo Pahl, Daario Naharis, 52:30, undefined, undefined, 1, 33
-Great Master, undefined, 7:45, undefined, undefined, 1, 34
-Locke, undefined, 44:46, undefined, undefined, 2, 35
+Great Master, uprising slaves, 7:45, undefined, undefined, 1, 34
+Locke, Hodor, 44:46, undefined, undefined, 2, 35
 Karl Tanner, Jon Snow, 47:51, undefined, undefined, 2, 35
 Rast, Jon Snow's wolf, 49:47, undefined, undefined, 2, 35
 Dying Man, the Hound, 8:57, undefined, undefined, 1, 37
@@ -137,7 +137,7 @@ Ygritte, Olly, 41:39, undefined, undefined, 3, 39
 Mag Mar Tun Doh Weg, Grenn and 5 other black brothers, 47:02, undefined, undefined, 1, 39
 Grenn, Mag Mar Tun Doh Weg, 47:02, undefined, undefined, 2, 39
 Cooper, Mag Mar Tun Doh Weg, 47:02, undefined, undefined, 1, 39
-Done Hill, Mag Mar Tun Doh Weg, 47:02, undefined, undefined, 1, 39
+Donel Hill, Mag Mar Tun Doh Weg, 47:02, undefined, undefined, 1, 39
 Zalla, Dragon, 23:25, undefined, undefined, 1, 40
 Jojen Reed, wight, 35:56, undefined, undefined, 2, 40
 Shae, Tyrion Lannister, 54:57, undefined, undefined, 3, 40
@@ -149,14 +149,14 @@ Yoren, Amory Lorch, 48:22, undefined, undefined, 2, 13
 Lommy, Polliver, 50:13, undefined, undefined, 2, 13
 Rennick, Robb Stark's wolf, 3:39, undefined, undefined, 1, 14
 Lannister guardsmen, Robb Stark's wolf, 3:39, undefined, undefined, 1, 14
-Tortured Prisoner, undefined, 28:13, undefined, undefined, 1, 14
+Tortured Prisoner, The Tickler, 28:13, undefined, undefined, 1, 14
 Renly Baratheon, shadow creature, 3:38, Baratheon, undefined, 3, 15
 Emmon Cuy, Brienne of Tarth, 4:04, undefined, undefined, 1, 15
 Robar Royce, Brienne of Tarth, 4:12, undefined, undefined, 1, 15
 The Tickler, Jaqen H'ghar, 52:10, undefined, undefined, 1, 15
-Rodrik Cassel, Theon Greyjoy , 9:35, undefined, undefined, 2, 16
+Rodrik Cassel, Theon Greyjoy, 9:35, undefined, undefined, 2, 16
 The High Septon, rioters, 26:25, undefined, undefined, 1, 16
-Armory Lorch, Jagen H'ghar, 38:41, undefined, undefined, 1, 16
+Amory Lorch, Jagen H'ghar, 38:41, undefined, undefined, 1, 16
 Drennan , Osha, 50:19, undefined, undefined, 1, 16
 Irri, Xaro Xhoan Daxos, 52:00, undefined, undefined, 2, 16
 Alton Lannister, Jamie Lannister, 38:38, Lannister, undefined, 1, 17
@@ -178,7 +178,7 @@ Xaro Xhoan Daxos, undefined, 56:46, undefined, undefined, 2, 20
 Hoster Tully, undefined, 5:31, Tully, undefined, 1, 22
 Master Torturer, Ramsay Snow, 45:14, undefined, undefined, 1, 23
 Bannen, undefined, 34:51, undefined, undefined, 1, 24
-Caster, Karl Tanner, 38:39, undefined, undefined, 2, 24
+Craster, Karl Tanner, 38:39, undefined, undefined, 2, 24
 Jeor Mormont, Rast, 39:03, undefined, undefined, 2, 24
 Kraznys mo Nakloz, dragon, 49:00, undefined, undefined, 1, 24
 Willen Lannister, Richard Karstark, 20:55, Lannister, undefined, 1, 25
@@ -187,10 +187,10 @@ Richard Karstark, Robb Stark, 25:09, undefined, undefined, 2, 25
 Ros, Joffrey, 48:40, undefined, undefined, 2, 26
 Mero, Daario Naharis, 45:11, undefined, undefined, 1, 28
 Prendahl na Ghezn, Daario Naharis, 45:11, undefined, undefined, 1, 28
-White Walker, undefined, 54:25, undefined, undefined, 1, 28
+White Walker, Samwell Tarly, 54:25, undefined, undefined, 1, 28
 Old Man, Ygritte, 25:04, undefined, undefined, 1, 29
 Orell, Jon Snow, 26:20, undefined, undefined, 2, 29
-Talisa Stark, Lorthar Frey, 44:15, Stark, undefined, 3, 29
+Talisa Stark, Lothar Frey, 44:15, Stark, undefined, 3, 29
 Robb Stark, Roose Bolton, 48:37, Stark, undefined, 3, 29
 Joyeuse Erenford, Catelyn Stark, 48:57, undefined, undefined, 1, 29
 Catelyn Stark, Walder Rivers, 49:05, Stark, undefined, 3, 29
