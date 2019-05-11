@@ -8,8 +8,8 @@ Lead Dornish guard, Bronn, 34:17, undefined, undefined, 1, 44
 Merchant captain, Obara Sand, 38:42, undefined, undefined, 1, 44
 Ser Barristan Selmy, Sons of Harpy, 47:46, undefined, undefined, 2, 44
 Great Master, dragon, 4:59, undefined, undefined, 1, 45
-Ghita, Arya , 13:20, undefined, undefined, 1, 46
-Maester Aemon, undefined, 9:45, Targaryen, undefined, 2, 47
+Ghita, Arya Stark , 13:20, undefined, undefined, 1, 46
+Maester Aemon, natural death, 9:45, Targaryen, undefined, 2, 47
 Old Woman, Ramsay Bolton, 13:42, undefined, undefined, 1, 47
 Lord of Bones, Tormund, 32:50, undefined, undefined, 2, 48
 Loboda, White Walker, 50:16, undefined, undefined, 1, 48
@@ -35,7 +35,6 @@ Newborn Bolton, Ramsay Bolton, 35:17, Bolton, undefined, 1, 52
 Balon Greyjoy, Euron Greyjoy, 42:21, Greyjoy, undefined, 2, 52
 Gerold Hightower, Ned Stark, 14:15, undefined, flashback, 1, 53
 Arthur Dayne, Ned Stark, 16:16, undefined, flashback, 1, 53
-Jon Umber, undefined, 43:32, undefined, undefined, 1, 53
 Bowen Marsh, Jon Snow, 49:17, undefined, undefined, 1, 53
 Othell Yarwyck, Jon Snow, 49:17, undefined, undefined, 1, 53
 Alliser Thorne, Jon Snow, 49:17, undefined, undefined, 2, 53
@@ -43,13 +42,12 @@ Olly, Jon Snow, 49:17, undefined, undefined, 2, 53
 Iggo, Daario Naharis, 24:20, undefined, undefined, 1, 54
 Akho, Daario Naharis, 24:39, undefined, undefined, 1, 54
 Osha, Ramsay Bolton, 46:18, undefined, undefined, 2, 54
-Moro and 9 other Khals, Daenery, 54:27, undefined, undefined, 2, 54
+Moro and 9 other Khals, Daenerys, 54:27, undefined, undefined, 2, 54
 White Walker, Meera Reed, 50:51, undefined, undefined, 1, 55
 Three-eyed raven, the Night King, 51:51, undefined, undefined, 2, 55
 Leaf, activating an explosive device taking out wights, 52:40, undefined, undefined, 1, 55
 Hodor, wights, 54:26, undefined, undefined, 2, 55
 Aerys Targaryen, Jaime Lannister, 2:49, undefined, flashback, 1, 56
-Maege Mormont, undefined, 23:14, undefined, undefined, 1, 57
 Brother Ray, rogue members of the Brotherhood Without Banners, 48:13, undefined, undefined, 1, 57
 Steve, Sandor Clegane, 8:24, undefined, undefined, 1, 58
 Riddell, Sandor Clegane, 8:26, undefined, undefined, 1, 58
@@ -67,7 +65,7 @@ Razdal mo Eraz, Grey Worm, 10:24, undefined, undefined, 2, 59
 Rickon Stark, Ramsay Bolton, 35:26, Stark, undefined, 2, 59
 Smalljon Umber, Tormund, 47:36, undefined, undefined, 2, 59
 Wun Weg Wun Dar Wun, Ramsay Bolton, 51:29, undefined, undefined, 2, 59
-Ramsay Bolton, his own dogs, 51:13, Bolton, undefined, 3, 59
+Ramsay Bolton, Ramsay Bolton's dogs, 51:13, Bolton, undefined, 3, 59
 Grand Maester Pycelle, kids, 13:07, undefined, undefined, 2, 60
 Lancel Lannister, wildfire, 17:17, Lannister, undefined, 2, 60
 High Sparrow, wildfire, 17:27, undefined, undefined, 3, 60
@@ -75,9 +73,9 @@ Margaery Tyrell, wildfire, 17:27, Tyrell, undefined, 3, 60
 Loras Tyrell, wildfire, 17:27, Tyrell, undefined, 2, 60
 Mace Tyrell, wildfire, 17:27, Tyrell, undefined, 2, 60
 Kevan Lannister, wild fire, 17:27, Lannister, undefined, 2, 60
-Tommen Baratheon, juming out a window, 22:52, Baratheon, undefined, 3, 60
-Walder Rivers, Arya Star, 48:30, Frey, undefined, 1, 60
-Lothar Frey, Arya Star, 48:30, Frey, undefined, 1, 60
+Tommen Baratheon, jumping out a window, 22:52, Baratheon, undefined, 3, 60
+Walder Rivers, Arya Stark, 48:30, Frey, undefined, 1, 60
+Lothar Frey, Arya Stark, 48:30, Frey, undefined, 1, 60
 Walder Frey, Arya Stark, 49:03, Frey, undefined, 2, 60
 Waymar Royce, White Walker, 5:52, undefined, undefined, 1, 1
 Gared, White Walker, 6:58, undefined, undefined, 1, 1
@@ -90,17 +88,17 @@ Kurleket, hill tribesmen, 11:56, undefined, undefined, 1, 5
 Willis Wode, hill tribesmen, 12:31, undefined, undefined, 1, 5
 Wyl, Lannister guardsmen, 51:14, undefined, undefined, 1, 5
 Heward, Lannister guardsmen, 51:14, undefined, undefined, 1, 5
-Jory Cassel, Jamie Lannister, 51:30, undefined, undefined, 2, 5
+Jory Cassel, Jaime Lannister, 51:30, undefined, undefined, 2, 5
 Wallen, Rob Stark, 11:23, undefined, undefined, 1, 6
 Stiv, Theon Greyjoy, 12:05, undefined, undefined, 1, 6
 Vardis Egen, Bronn, 38:19, undefined, undefined, 1, 6
 Viserys Targaryen , Khal Drogo, 51:04, Targaryen, undefined, 3, 6
-Wine seller, undefined, 51:53, undefined, undefined, 1, 7
+Wine seller, Khal Drogo, 51:53, undefined, undefined, 1, 7
 Robert Baratheon, a boar, 52:09, Baratheon, undefined, 3, 7
 Vayon Poole, House Lannister men, 2:25, undefined, undefined, 1, 8
 Mordane, House Lannister men, 3:12, undefined, undefined, 1, 8
 Syrio Forel, House Lannister men, 5:46, undefined, undefined, 1, 8
-Stableboy, Arya, 7:02, undefined, undefined, 1, 8
+Stableboy, Arya Stark, 7:02, undefined, undefined, 1, 8
 Mago, Khal Drogo, 30:52, undefined, undefined, 1, 8
 Othor, Jon Snow, 25:58, undefined, undefined, 1, 8
 Qotho, Jorah Mormont, 34:02, undefined, undefined, 2, 9
@@ -131,7 +129,7 @@ Oberyn Martell, the Mountain, 50:05, Martell, undefined, 3, 38
 Pypar, Ygritte, 29:44, undefined, undefined, 2, 39
 Thenn warg, Samwell Tarly, 34:00, undefined, undefined, 2, 39
 Dongo, Black Brothers, 35:44, undefined, undefined, 1, 39
-Smitty, undefined, 36:02, undefined, undefined, 1, 39
+Smitty, accident, 36:02, undefined, undefined, 1, 39
 Styr, Jon Snow, 41:12, undefined, undefined, 2, 39
 Ygritte, Olly, 41:39, undefined, undefined, 3, 39
 Mag Mar Tun Doh Weg, Grenn and 5 other black brothers, 47:02, undefined, undefined, 1, 39
@@ -159,8 +157,8 @@ The High Septon, rioters, 26:25, undefined, undefined, 1, 16
 Amory Lorch, Jagen H'ghar, 38:41, undefined, undefined, 1, 16
 Drennan , Osha, 50:19, undefined, undefined, 1, 16
 Irri, Xaro Xhoan Daxos, 52:00, undefined, undefined, 2, 16
-Alton Lannister, Jamie Lannister, 38:38, Lannister, undefined, 1, 17
-Torrhen Karstark, Jamie Lannister, 39:07, undefined, undefined, 1, 17
+Alton Lannister, Jaime Lannister, 38:38, Lannister, undefined, 1, 17
+Torrhen Karstark, Jaime Lannister, 39:07, undefined, undefined, 1, 17
 Eleven of the Thirteen, Pyat Pree, 42:41, undefined, undefined, 1, 17
 Billy, Theon Greyjoy, 53:27, undefined, undefined, 1, 17
 Jack, Theon Greyjoy, 53:27, undefined, undefined, 1, 17
@@ -173,11 +171,11 @@ Tom, Brienne of Tarth, 15:51, undefined, undefined, 1, 20
 Maester Luwin, Dagmer, 28:31, undefined, undefined, 2, 20
 Pyat Pree, Daenerys' dragons, 51:08, undefined, undefined, 2, 20
 Qhorin, Jon Snow, 53:26, undefined, undefined, 2, 20
-Doreah, undefined, 56:46, undefined, undefined, 2, 20
-Xaro Xhoan Daxos, undefined, 56:46, undefined, undefined, 2, 20
-Hoster Tully, undefined, 5:31, Tully, undefined, 1, 22
+Doreah, Daenerys, 56:46, undefined, undefined, 2, 20
+Xaro Xhoan Daxos, Daenerys, 56:46, undefined, undefined, 2, 20
+Hoster Tully, natural death, 5:31, Tully, undefined, 1, 22
 Master Torturer, Ramsay Snow, 45:14, undefined, undefined, 1, 23
-Bannen, undefined, 34:51, undefined, undefined, 1, 24
+Bannen, accident, 34:51, undefined, undefined, 1, 24
 Craster, Karl Tanner, 38:39, undefined, undefined, 2, 24
 Jeor Mormont, Rast, 39:03, undefined, undefined, 2, 24
 Kraznys mo Nakloz, dragon, 49:00, undefined, undefined, 1, 24
