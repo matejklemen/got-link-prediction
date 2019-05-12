@@ -5,6 +5,7 @@ import leidenalg
 from igraph import *
 from math import factorial as fac
 import numpy as np
+from copy import deepcopy
 
 random.seed(1337)
 
@@ -29,7 +30,8 @@ def pref_index(link, G, G_igraph):
 
 
 def adamic_adar_index(link, G, G_igraph):
-    return sum([1 / float(log(G.degree(neighbor))) for neighbor in nx.common_neighbors(G, link[0], link[1])])
+    return sum([1 / float(log(G.degree(neighbor)))
+                for neighbor in (set(nx.neighbors(G, link[0])) & set(nx.neighbors(G, link[1])))])
 
 
 leiden_partitions = {}
@@ -59,7 +61,8 @@ def leiden_index(link, G_nx, G):
 def get_auc_for_index(Ln, Lp, index_func, G, G_igraph):
     m_ = 0
     m__ = 0
-    for lnval, lpval in zip(compute_index(Ln, index_func, G, G_igraph), compute_index(Lp, index_func, G, G_igraph)):
+    for lnval, lpval in zip(compute_index(Ln, index_func, G, G_igraph),
+                            compute_index(Lp, index_func, G, G_igraph)):
         if lnval < lpval:
             m_ += 1
         elif lnval == lpval:
@@ -79,7 +82,7 @@ def find_edges_after_episode(episode, G):
 if __name__ == "__main__":
 
     RUNS = 5
-    G_orig = nx.Graph(nx.read_pajek('./data/deaths.net'))
+    G_orig = nx.DiGraph(nx.read_pajek('./data/deaths.net'))
 
     m = G_orig.number_of_edges()
     pref_scores = []
@@ -90,17 +93,20 @@ if __name__ == "__main__":
 
     for run in range(RUNS):
         print("Run: ", run)
-        G = G_orig.copy()
+        G = deepcopy(G_orig)
 
         Lp = find_edges_after_episode(50, G)
 
         Ln = set()
         while len(Ln) < len(Lp):
             node1, node2 = random.sample(G.nodes(), 2)
-            if (node1 not in G.neighbors(node2)):
+            if node1 not in G.neighbors(node2) and \
+                    node2 not in G.neighbors(node1):
                 Ln.add((node1, node2))
 
         G.remove_edges_from(list(Lp))
+        print('{} negative and {} positive examples...'.format(len(Ln),
+                                                               len(Lp)))
 
         # sending the adjusted graph to iGraph
         nx.write_gml(G, './data/deaths_removededges.gml')
