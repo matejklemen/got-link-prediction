@@ -34,6 +34,13 @@ def adamic_adar_index(link, G, G_igraph):
                 for neighbor in (set(nx.neighbors(G, link[0])) & set(nx.neighbors(G, link[1])))])
 
 
+def random_index(link, G, G_igraph):
+    if G.degree(link[0]) == 0 and random.random() < 0.5:
+        return 1
+    else:
+        return 0
+
+
 leiden_partitions = {}
 
 
@@ -88,6 +95,7 @@ if __name__ == "__main__":
     pref_scores = []
     adamic_adar_scores = []
     leiden_scores = []
+    random_scores = []
 
     print("Running calculations " + str(RUNS) + " times ...")
 
@@ -119,6 +127,8 @@ if __name__ == "__main__":
             Ln, Lp, adamic_adar_index, G, G_igraph))
         leiden_scores.append(get_auc_for_index(
             Ln, Lp, leiden_index, G, G_igraph))
+        random_scores.append(get_auc_for_index(
+            Ln, Lp, random_index, G, G_igraph))
 
     # Print mean results with the standard deviation for all indices
     print("\n----")
@@ -131,4 +141,8 @@ if __name__ == "__main__":
     print("\nAUC (Community index)")
     print("\t - Mean:", np.mean(leiden_scores))
     print("\t - Std. deviation:", np.std(leiden_scores))
+    print("----")
+    print("\nAUC (Random index)")
+    print("\t - Mean:", np.mean(random_scores))
+    print("\t - Std. deviation:", np.std(random_scores))
     print("----")
