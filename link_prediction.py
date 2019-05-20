@@ -35,7 +35,7 @@ def adamic_adar_index(link, G, G_igraph):
 
 
 def random_index(link, G, G_igraph):
-    if G.degree(link[0]) == 0 and random.random() < 0.5:
+    if G.degree(link[0]) == 0 and G.degree(link[1]) == 0:
         return 1
     else:
         return 0
