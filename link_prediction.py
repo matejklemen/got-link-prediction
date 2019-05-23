@@ -35,7 +35,7 @@ def adamic_adar_index(link, G, G_igraph):
 
 
 def random_index(link, G, G_igraph):
-    if G.degree(link[0]) == 0 and G.degree(link[1]) == 0:
+    if G.in_degree(link[0]) == 0 and G.in_degree(link[1]) == 0:
         return 1
     else:
         return 0
@@ -65,11 +65,26 @@ def leiden_index(link, G_nx, G):
         return 0
 
 
-def get_auc_for_index(Ln, Lp, index_func, G, G_igraph):
+def get_auc_for_index(Lns, Lps, index_func, G, G_igraph):
+    
     m_ = 0
     m__ = 0
     for lnval, lpval in zip(compute_index(Ln, index_func, G, G_igraph),
                             compute_index(Lp, index_func, G, G_igraph)):
+        if lnval < lpval:
+            m_ += 1
+        elif lnval == lpval:
+            m__ += 1
+
+    return (m_ + m__/2) / len(Ln)
+
+def calculate_auc(Ln_scores, Lp_scores):
+    Ln_scores_with_rep = random.choices(list(Ln_scores), k=round(len(Ln_scores)))
+    Lp_scores_with_rep = random.choices(list(Lp_scores), k=round(len(Lp_scores)))
+    m_ = 0
+    m__ = 0
+
+    for lnval, lpval in zip(Ln_scores_with_rep, Lp_scores_with_rep):
         if lnval < lpval:
             m_ += 1
         elif lnval == lpval:
@@ -85,11 +100,17 @@ def find_edges_after_episode(episode, G):
             res.add(edge)
     return res
 
+def find_edges_in_episode(episode, G):
+    res = set()
+    for edge, edge_episode in nx.get_edge_attributes(G, 'episode').items():
+        if int(edge_episode) == episode:
+            res.add(edge)
+    return res
 
 if __name__ == "__main__":
 
     RUNS = 5
-    G_orig = nx.DiGraph(nx.read_pajek('./data/deaths.net'))
+    G_orig = nx.read_pajek('./data/deaths.net')
 
     m = G_orig.number_of_edges()
     pref_scores = []
@@ -99,36 +120,52 @@ if __name__ == "__main__":
 
     print("Running calculations " + str(RUNS) + " times ...")
 
+    predict_from_episode = 50
+
     for run in range(RUNS):
         print("Run: ", run)
-        G = deepcopy(G_orig)
+        G_full = deepcopy(G_orig)
 
-        Lp = find_edges_after_episode(50, G)
+        Lp_predictions = { 'pref' : [], 'aa': [], 'comm': [], 'baseline': [] }
+        Ln_predictions = { 'pref' : [], 'aa': [], 'comm': [], 'baseline': [] }
 
-        Ln = set()
-        while len(Ln) < len(Lp):
-            node1, node2 = random.sample(G.nodes(), 2)
-            if node1 not in G.neighbors(node2) and \
-                    node2 not in G.neighbors(node1):
-                Ln.add((node1, node2))
+        for episode in range(predict_from_episode, 60 + 1):
+            G = deepcopy(G_full)
+            Lp = find_edges_in_episode(episode, G)
+            Lp_after = find_edges_after_episode(episode, G)
 
-        G.remove_edges_from(list(Lp))
-        print('{} negative and {} positive examples...'.format(len(Ln),
-                                                               len(Lp)))
+            G.remove_edges_from(list(Lp))
+            G.remove_edges_from(list(Lp_after))
 
-        # sending the adjusted graph to iGraph
-        nx.write_gml(G, './data/deaths_removededges.gml')
+            # sending the adjusted graph to iGraph (sorry for hacks)
+            nx.write_gml(G, './data/deaths_removededges.gml')
+            G_igraph = Graph.Read_GML('./data/deaths_removededges.gml')
+        
+            Lp_predictions['pref'].extend(compute_index(Lp, pref_index, G, G_igraph))
+            Lp_predictions['aa'].extend(compute_index(Lp, adamic_adar_index, G, G_igraph))
+            Lp_predictions['comm'].extend(compute_index(Lp, leiden_index, G, G_igraph))
+            Lp_predictions['baseline'].extend(compute_index(Lp, random_index, G, G_igraph))
+        
+        # sending the full graph to iGraph
+        nx.write_gml(G_full, './data/deaths_removededges.gml')
         G_igraph = Graph.Read_GML('./data/deaths_removededges.gml')
-        G_igraph = G_igraph.as_undirected()
+        
+        Ln = set()
+        while len(Ln) < len(Lp_predictions['pref']):
+                node1, node2 = random.sample(G_full.nodes(), 2)
+                if node1 not in G_full.neighbors(node2) and \
+                        node2 not in G_full.neighbors(node1):
+                    Ln.add((node1, node2))
 
-        pref_scores.append(get_auc_for_index(
-            Ln, Lp, pref_index, G, G_igraph))
-        adamic_adar_scores.append(get_auc_for_index(
-            Ln, Lp, adamic_adar_index, G, G_igraph))
-        leiden_scores.append(get_auc_for_index(
-            Ln, Lp, leiden_index, G, G_igraph))
-        random_scores.append(get_auc_for_index(
-            Ln, Lp, random_index, G, G_igraph))
+        Ln_predictions['pref'] = compute_index(Ln, pref_index, G_full, G_igraph)
+        Ln_predictions['aa'] = compute_index(Ln, adamic_adar_index, G_full, G_igraph)
+        Ln_predictions['comm'] = compute_index(Ln, leiden_index, G_full, G_igraph)
+        Ln_predictions['baseline'] = compute_index(Ln, random_index, G_full, G_igraph)
+
+        pref_scores.append(calculate_auc(Ln_predictions['pref'], Lp_predictions['pref']))
+        adamic_adar_scores.append(calculate_auc(Ln_predictions['aa'], Lp_predictions['aa']))
+        leiden_scores.append(calculate_auc(Ln_predictions['comm'], Lp_predictions['comm']))
+        random_scores.append(calculate_auc(Ln_predictions['baseline'], Lp_predictions['baseline']))
 
     # Print mean results with the standard deviation for all indices
     print("\n----")
