@@ -26,7 +26,8 @@ def compute_index(links, index_func, G, G_igraph):
 
 
 def pref_index(link, G, G_igraph):
-    return G.out_degree(link[0]) * G.out_degree(link[1])
+    # Multiply with -1 to "invert" classifier decision (to avoid invalid AUC)
+    return - G.out_degree(link[0]) * G.out_degree(link[1])
 
 
 def adamic_adar_index(link, G, G_igraph):
@@ -60,7 +61,7 @@ def leiden_index(link, G_nx, G):
         mc = leiden_partitions[current_graph_id].total_weight_from_comm(
             leiden_partitions[current_graph_id].membership[u.index])
 
-        return mc / binomial(nc, 2)
+        return mc / (nc * (nc - 1) / 2)
     else:
         return 0
 
@@ -82,14 +83,14 @@ def calculate_auc(Ln_scores, Lp_scores):
     return (m_ + m__/2) / len(Ln_scores)
 
 
-def calculate_precision(Ln_scores, Lp_scores, thresh):
+def calculate_precision(Ln_scores, Lp_scores, decision_func):
     # `Ln_scores` and `Lp_scores` are (possibly unnormalized) scores returned by methods
-    # `thresh` is a threshold - scores > this threshold are classified as positive, scores
-    # below this threshold are classified as negative
+    # `decision_func` is a function that takes a score and returns 1 if score represents a positive
+    # example and 0 otherwise
 
     # 1 = pos., 0 = neg. classification
-    Lp_cls = [int(score > thresh) for score in Lp_scores]
-    Ln_cls = [int(score > thresh) for score in Ln_scores]
+    Lp_cls = [decision_func(score) for score in Lp_scores]
+    Ln_cls = [decision_func(score) for score in Ln_scores]
 
     # Number of tps = number of 1s in list of predicted classes for actual POSITIVE examples
     tp = sum(Lp_cls)
@@ -102,13 +103,13 @@ def calculate_precision(Ln_scores, Lp_scores, thresh):
     return tp / (tp + fp)
 
 
-def calculate_recall(Ln_scores, Lp_scores, thresh):
+def calculate_recall(Ln_scores, Lp_scores, decision_func):
     # `Ln_scores` and `Lp_scores` are (possibly unnormalized) scores returned by methods
-    # `thresh` is a threshold - scores > this threshold are classified as positive, scores
-    # below this threshold are classified as negative
+    # `decision_func` is a function that takes a score and returns 1 if score represents a positive
+    # example and 0 otherwise
 
     # 1 = pos., 0 = neg. classification
-    Lp_cls = [int(score > thresh) for score in Lp_scores]
+    Lp_cls = [decision_func(score) for score in Lp_scores]
 
     # Number of tps = number of 1s in list of predicted classes for actual POSITIVE examples
     tp = sum(Lp_cls)
@@ -210,33 +211,34 @@ if __name__ == "__main__":
         random_scores.append(calculate_auc(
             Ln_predictions['baseline'], Lp_predictions['baseline']))
 
+        # Inverting classifier decisions with function `s < 0` to get valid AUC (>= 0.5)
         pref_prec.append(calculate_precision(Ln_predictions['pref'],
                                              Lp_predictions['pref'],
-                                             thresh=0))
+                                             decision_func=(lambda s: s < 0)))
         pref_rec.append(calculate_recall(Ln_predictions['pref'],
                                          Lp_predictions['pref'],
-                                         thresh=0))
+                                         decision_func=(lambda s: s < 0)))
 
         adamic_adar_prec.append(calculate_precision(Ln_predictions['aa'],
                                                     Lp_predictions['aa'],
-                                                    thresh=0))
+                                                    decision_func=(lambda s: s > 0)))
         adamic_adar_rec.append(calculate_recall(Ln_predictions['aa'],
                                                 Lp_predictions['aa'],
-                                                thresh=0))
+                                                decision_func=(lambda s: s > 0)))
 
         leiden_prec.append(calculate_precision(Ln_predictions['comm'],
                                                Lp_predictions['comm'],
-                                               thresh=0))
+                                               decision_func=(lambda s: s > 0)))
         leiden_rec.append(calculate_recall(Ln_predictions['comm'],
                                            Lp_predictions['comm'],
-                                           thresh=0))
+                                           decision_func=(lambda s: s > 0)))
 
         random_prec.append(calculate_precision(Ln_predictions['baseline'],
                                                Lp_predictions['baseline'],
-                                               thresh=0))
+                                               decision_func=(lambda s: s > 0)))
         random_rec.append(calculate_recall(Ln_predictions['baseline'],
                                            Lp_predictions['baseline'],
-                                           thresh=0))
+                                           decision_func=(lambda s: s > 0)))
 
     # Print mean results with the standard deviation for all indices
     print("\n----")
@@ -257,7 +259,7 @@ if __name__ == "__main__":
     print("Precision (Adamic-Adar index)")
     print("\t - Mean:", np.mean(adamic_adar_prec))
     print("\t - Std. deviation:", np.std(adamic_adar_prec))
-    print("\nRecall (Adamic-Adar index)")
+    print("Recall (Adamic-Adar index)")
     print("\t - Mean:", np.mean(adamic_adar_rec))
     print("\t - Std. deviation:", np.std(adamic_adar_rec))
     print("----")
