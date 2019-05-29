@@ -96,6 +96,9 @@ def calculate_precision(Ln_scores, Lp_scores, thresh):
     # Number of fps = number of 1s in list of predicted classes for actual NEGATIVE examples
     fp = sum(Ln_cls)
 
+    if (tp + fp) == 0:
+        return 0
+
     return tp / (tp + fp)
 
 
@@ -109,10 +112,8 @@ def calculate_recall(Ln_scores, Lp_scores, thresh):
 
     # Number of tps = number of 1s in list of predicted classes for actual POSITIVE examples
     tp = sum(Lp_cls)
-    # Number of fns = number of 0s in list of predicted classes for actual POSITIVE examples
-    fn = len(Lp_cls) - tp
 
-    return tp / (tp + fn)
+    return tp / len(Lp_cls)
 
 
 def find_edges_after_episode(episode, G):
@@ -211,45 +212,74 @@ if __name__ == "__main__":
 
         pref_prec.append(calculate_precision(Ln_predictions['pref'],
                                              Lp_predictions['pref'],
-                                             thresh=...))
-        pref_prec.append(calculate_recall(Ln_predictions['pref'],
-                                          Lp_predictions['pref'],
-                                          thresh=...))
+                                             thresh=0))
+        pref_rec.append(calculate_recall(Ln_predictions['pref'],
+                                         Lp_predictions['pref'],
+                                         thresh=0))
 
         adamic_adar_prec.append(calculate_precision(Ln_predictions['aa'],
                                                     Lp_predictions['aa'],
-                                                    thresh=...))
+                                                    thresh=0))
         adamic_adar_rec.append(calculate_recall(Ln_predictions['aa'],
                                                 Lp_predictions['aa'],
-                                                thresh=...))
+                                                thresh=0))
 
         leiden_prec.append(calculate_precision(Ln_predictions['comm'],
                                                Lp_predictions['comm'],
-                                               thresh=...))
+                                               thresh=0))
         leiden_rec.append(calculate_recall(Ln_predictions['comm'],
                                            Lp_predictions['comm'],
-                                           thresh=...))
+                                           thresh=0))
 
         random_prec.append(calculate_precision(Ln_predictions['baseline'],
                                                Lp_predictions['baseline'],
-                                               thresh=0.5))
+                                               thresh=0))
         random_rec.append(calculate_precision(Ln_predictions['baseline'],
                                               Lp_predictions['baseline'],
-                                              thresh=0.5))
+                                              thresh=0))
 
     # Print mean results with the standard deviation for all indices
     print("\n----")
     print("AUC (Preferential attachment index)")
     print("\t - Mean:", np.mean(pref_scores))
     print("\t - Std. deviation:", np.std(pref_scores))
+    print("Precision (Preferential attachment index)")
+    print("\t - Mean:", np.mean(pref_prec))
+    print("\t - Std. deviation:", np.std(pref_prec))
+    print("Recall (Preferential attachment index)")
+    print("\t - Mean:", np.mean(pref_rec))
+    print("\t - Std. deviation:", np.std(pref_rec))
+    print("----")
+
     print("\nAUC (Adamic-Adar index)")
     print("\t - Mean:", np.mean(adamic_adar_scores))
     print("\t - Std. deviation:", np.std(adamic_adar_scores))
+    print("Precision (Adamic-Adar index)")
+    print("\t - Mean:", np.mean(adamic_adar_prec))
+    print("\t - Std. deviation:", np.std(adamic_adar_prec))
+    print("\nRecall (Adamic-Adar index)")
+    print("\t - Mean:", np.mean(adamic_adar_rec))
+    print("\t - Std. deviation:", np.std(adamic_adar_rec))
+    print("----")
+
     print("\nAUC (Community index)")
     print("\t - Mean:", np.mean(leiden_scores))
     print("\t - Std. deviation:", np.std(leiden_scores))
+    print("Precision (Community index)")
+    print("\t - Mean:", np.mean(leiden_prec))
+    print("\t - Std. deviation:", np.std(leiden_prec))
+    print("Recall (Community index)")
+    print("\t - Mean:", np.mean(leiden_rec))
+    print("\t - Std. deviation:", np.std(leiden_rec))
     print("----")
+
     print("\nAUC (Random index)")
     print("\t - Mean:", np.mean(random_scores))
     print("\t - Std. deviation:", np.std(random_scores))
+    print("Precision (Random index)")
+    print("\t - Mean:", np.mean(random_prec))
+    print("\t - Std. deviation:", np.std(random_prec))
+    print("Recall (Random index)")
+    print("\t - Mean:", np.mean(random_rec))
+    print("\t - Std. deviation:", np.std(random_rec))
     print("----")
