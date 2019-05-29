@@ -84,12 +84,12 @@ def calculate_auc(Ln_scores, Lp_scores):
 
 def calculate_precision(Ln_scores, Lp_scores, thresh):
     # `Ln_scores` and `Lp_scores` are (possibly unnormalized) scores returned by methods
-    # `thresh` is a threshold - scores >= this threshold are classified as positive, scores
+    # `thresh` is a threshold - scores > this threshold are classified as positive, scores
     # below this threshold are classified as negative
 
     # 1 = pos., 0 = neg. classification
-    Lp_cls = [int(score >= thresh) for score in Lp_scores]
-    Ln_cls = [int(score >= thresh) for score in Ln_scores]
+    Lp_cls = [int(score > thresh) for score in Lp_scores]
+    Ln_cls = [int(score > thresh) for score in Ln_scores]
 
     # Number of tps = number of 1s in list of predicted classes for actual POSITIVE examples
     tp = sum(Lp_cls)
@@ -101,11 +101,11 @@ def calculate_precision(Ln_scores, Lp_scores, thresh):
 
 def calculate_recall(Ln_scores, Lp_scores, thresh):
     # `Ln_scores` and `Lp_scores` are (possibly unnormalized) scores returned by methods
-    # `thresh` is a threshold - scores >= this threshold are classified as positive, scores
+    # `thresh` is a threshold - scores > this threshold are classified as positive, scores
     # below this threshold are classified as negative
 
     # 1 = pos., 0 = neg. classification
-    Lp_cls = [int(score >= thresh) for score in Lp_scores]
+    Lp_cls = [int(score > thresh) for score in Lp_scores]
 
     # Number of tps = number of 1s in list of predicted classes for actual POSITIVE examples
     tp = sum(Lp_cls)
@@ -132,15 +132,21 @@ def find_edges_in_episode(episode, G):
 
 
 if __name__ == "__main__":
-
     RUNS = 5
     G_orig = nx.read_pajek('./data/deaths.net')
 
     m = G_orig.number_of_edges()
+    # AUCs over several runs
     pref_scores = []
     adamic_adar_scores = []
     leiden_scores = []
     random_scores = []
+
+    # Precision and recall over several runs
+    pref_prec, pref_rec = [], []
+    adamic_adar_prec, adamic_adar_rec = [], []
+    leiden_prec, leiden_rec = [], []
+    random_prec, random_rec = [], []
 
     print("Running calculations " + str(RUNS) + " times ...")
 
@@ -202,6 +208,34 @@ if __name__ == "__main__":
             Ln_predictions['comm'], Lp_predictions['comm']))
         random_scores.append(calculate_auc(
             Ln_predictions['baseline'], Lp_predictions['baseline']))
+
+        pref_prec.append(calculate_precision(Ln_predictions['pref'],
+                                             Lp_predictions['pref'],
+                                             thresh=...))
+        pref_prec.append(calculate_recall(Ln_predictions['pref'],
+                                          Lp_predictions['pref'],
+                                          thresh=...))
+
+        adamic_adar_prec.append(calculate_precision(Ln_predictions['aa'],
+                                                    Lp_predictions['aa'],
+                                                    thresh=...))
+        adamic_adar_rec.append(calculate_recall(Ln_predictions['aa'],
+                                                Lp_predictions['aa'],
+                                                thresh=...))
+
+        leiden_prec.append(calculate_precision(Ln_predictions['comm'],
+                                               Lp_predictions['comm'],
+                                               thresh=...))
+        leiden_rec.append(calculate_recall(Ln_predictions['comm'],
+                                           Lp_predictions['comm'],
+                                           thresh=...))
+
+        random_prec.append(calculate_precision(Ln_predictions['baseline'],
+                                               Lp_predictions['baseline'],
+                                               thresh=0.5))
+        random_rec.append(calculate_precision(Ln_predictions['baseline'],
+                                              Lp_predictions['baseline'],
+                                              thresh=0.5))
 
     # Print mean results with the standard deviation for all indices
     print("\n----")
