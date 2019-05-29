@@ -82,6 +82,39 @@ def calculate_auc(Ln_scores, Lp_scores):
     return (m_ + m__/2) / len(Ln_scores)
 
 
+def calculate_precision(Ln_scores, Lp_scores, thresh):
+    # `Ln_scores` and `Lp_scores` are (possibly unnormalized) scores returned by methods
+    # `thresh` is a threshold - scores >= this threshold are classified as positive, scores
+    # below this threshold are classified as negative
+
+    # 1 = pos., 0 = neg. classification
+    Lp_cls = [int(score >= thresh) for score in Lp_scores]
+    Ln_cls = [int(score >= thresh) for score in Ln_scores]
+
+    # Number of tps = number of 1s in list of predicted classes for actual POSITIVE examples
+    tp = sum(Lp_cls)
+    # Number of fps = number of 1s in list of predicted classes for actual NEGATIVE examples
+    fp = sum(Ln_cls)
+
+    return tp / (tp + fp)
+
+
+def calculate_recall(Ln_scores, Lp_scores, thresh):
+    # `Ln_scores` and `Lp_scores` are (possibly unnormalized) scores returned by methods
+    # `thresh` is a threshold - scores >= this threshold are classified as positive, scores
+    # below this threshold are classified as negative
+
+    # 1 = pos., 0 = neg. classification
+    Lp_cls = [int(score >= thresh) for score in Lp_scores]
+
+    # Number of tps = number of 1s in list of predicted classes for actual POSITIVE examples
+    tp = sum(Lp_cls)
+    # Number of fns = number of 0s in list of predicted classes for actual POSITIVE examples
+    fn = len(Lp_cls) - tp
+
+    return tp / (tp + fn)
+
+
 def find_edges_after_episode(episode, G):
     res = set()
     for edge, edge_episode in nx.get_edge_attributes(G, 'episode').items():
