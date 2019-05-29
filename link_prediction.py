@@ -234,9 +234,9 @@ if __name__ == "__main__":
         random_prec.append(calculate_precision(Ln_predictions['baseline'],
                                                Lp_predictions['baseline'],
                                                thresh=0))
-        random_rec.append(calculate_precision(Ln_predictions['baseline'],
-                                              Lp_predictions['baseline'],
-                                              thresh=0))
+        random_rec.append(calculate_recall(Ln_predictions['baseline'],
+                                           Lp_predictions['baseline'],
+                                           thresh=0))
 
     # Print mean results with the standard deviation for all indices
     print("\n----")
