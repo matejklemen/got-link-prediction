@@ -26,7 +26,7 @@ def compute_index(links, index_func, G, G_igraph):
 
 
 def pref_index(link, G, G_igraph):
-    return G.degree(link[0]) * G.degree(link[1])
+    return G.out_degree(link[0]) * G.out_degree(link[1])
 
 
 def adamic_adar_index(link, G, G_igraph):
