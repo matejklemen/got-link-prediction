@@ -1,24 +1,39 @@
-import networkx as nx
-import random
-from math import log
 import leidenalg
-from igraph import *
-from math import factorial as fac
+import random
+
+import networkx as nx
 import numpy as np
+
 from copy import deepcopy
+from math import log
+from igraph import *
 
 random.seed(1337)
 
 
-def binomial(x, y):
-    try:
-        binom = fac(x) // fac(y) // fac(x - y)
-    except ValueError:
-        binom = 0
-    return binom
-
-
 def compute_index(links, index_func, G, G_igraph):
+    """ Compute index for links, provided in `links`.
+
+    Parameters
+    ----------
+    links: iterable (set, list, ...)
+        Links for which index should be computed
+
+    index_func: function
+        A function which assigns a score to a link. Should take 3 arguments: link, a NetworkX
+        graph and an iGraph graph
+
+    G: nx.DiGraph
+        Graph in NetworkX structure
+
+    G_igraph: ig.Graph
+        Graph in iGraph structure
+
+    Returns
+    -------
+    scores: list
+        Computed scores for the items provided in links
+    """
     scores = []
     for link in links:
         scores += [index_func(link, G, G_igraph)]
@@ -26,26 +41,32 @@ def compute_index(links, index_func, G, G_igraph):
 
 
 def pref_index(link, G, G_igraph):
+    """ Preferential attachment index. """
     # Multiply with -1 to "invert" classifier decision (to avoid invalid AUC)
     return - G.out_degree(link[0]) * G.out_degree(link[1])
 
 
 def adamic_adar_index(link, G, G_igraph):
+    """ Adamic-Adar index. """
     return sum([1 / float(log(G.degree(neighbor)))
                 for neighbor in (set(nx.neighbors(G, link[0])) & set(nx.neighbors(G, link[1])))])
 
 
 def baseline_index(link, G, G_igraph):
+    """ Baseline index, which predicts 1 if both endpoints of a link have an in-degree of 0,
+    and 1 otherwise.
+    """
     if G.in_degree(link[0]) == 0 and G.in_degree(link[1]) == 0:
-        return 1
+        return 1.0
     else:
-        return 0
+        return 0.0
 
 
 leiden_partitions = {}
 
 
 def leiden_index(link, G_nx, G):
+    """ Community index, based on communities, detected by Leiden algorithm. """
     global leiden_partitions
     current_graph_id = hash(G_nx.number_of_nodes())
     if current_graph_id not in leiden_partitions:
@@ -54,8 +75,8 @@ def leiden_index(link, G_nx, G):
     u = G.vs.find(label=link[0])
     v = G.vs.find(label=link[1])
 
-    if leiden_partitions[current_graph_id].membership[u.index] == leiden_partitions[current_graph_id].membership[v.index]:
-
+    if leiden_partitions[current_graph_id].membership[u.index] == \
+            leiden_partitions[current_graph_id].membership[v.index]:
         nc = leiden_partitions[current_graph_id].size(
             leiden_partitions[current_graph_id].membership[u.index])
         mc = leiden_partitions[current_graph_id].total_weight_from_comm(
@@ -67,6 +88,10 @@ def leiden_index(link, G_nx, G):
 
 
 def calculate_auc(Ln_scores, Lp_scores):
+    """ Compares how often a randomly chosen positive example has a higher score than a randomly
+    chosen negative example (which is what we want from a link prediction index ideally).
+    Gives +1 when that is achieved and +0.5 when the scores for pos. and neg. examples are equal.
+    """
     Ln_scores_with_rep = random.choices(
         list(Ln_scores), k=round(len(Ln_scores)))
     Lp_scores_with_rep = random.choices(
@@ -150,12 +175,11 @@ if __name__ == "__main__":
     leiden_prec, leiden_rec = [], []
     random_prec, random_rec = [], []
 
-    print("Running calculations " + str(RUNS) + " times ...")
-
+    print("Running calculations {} times ...".format(RUNS))
     predict_from_episode = 50
 
     for run in range(RUNS):
-        print("Run: ", run)
+        print("Run {}...".format(run))
         G_full = deepcopy(G_orig)
 
         Lp_predictions = {'pref': [], 'aa': [], 'comm': [], 'baseline': []}
