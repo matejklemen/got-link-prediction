@@ -158,6 +158,44 @@ def find_edges_in_episode(episode, G):
     return res
 
 
+def evaluate_original_distribution(episode, num_samples, G):
+    """ Evaluate methods on original (highly unbalanced) distribution.
+    How this works:
+    1.) Calculate density of directed network.
+    2.) Sample density * num_samples positive examples that appear >= ep. `episode`
+    3.) Sample `(num_samples - num_pos_ex)` negative examples from entire network.
+
+    Parameters
+    ----------
+    TODO: after this function is finished
+    """
+    m, n = G.number_of_edges(), G.number_of_nodes()
+    density = m / (n * (n - 1))
+    # ceil because we want to get to sample at least 1 positive example
+    num_pos_samples = min(num_samples, int(np.ceil(density * m)))
+    num_neg_samples = num_samples - num_pos_samples
+
+    # Sample positives from links after specified episode
+    pos_options = list(find_edges_after_episode(episode - 1, G_orig))
+    pos_samples = random.sample(pos_options, num_pos_samples)
+    G_orig.remove_edges_from(pos_samples)
+    pos_samples = set(pos_samples)
+
+    # Sample negatives from entire network
+    neg_samples = set()
+    while len(neg_samples) < num_neg_samples:
+        node1, node2 = random.sample(G_orig.nodes(), 2)
+        if node1 not in G_orig.neighbors(node2) and \
+                node2 not in G_orig.neighbors(node1):
+            neg_samples.add((node1, node2))
+
+    # TODO: probably refactor a whole bunch of things
+    # Maybe refactor it so that there is 1 evaluation method, where we just specify different
+    # options
+    print("Sampled {} positive samples and {} negative samples...".format(len(pos_samples),
+                                                                          len(neg_samples)))
+
+
 if __name__ == "__main__":
     RUNS = 5
     G_orig = nx.read_pajek('./data/deaths.net')
