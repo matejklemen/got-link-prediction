@@ -1,5 +1,4 @@
 import leidenalg
-import random
 
 import networkx as nx
 import numpy as np
@@ -8,7 +7,7 @@ from copy import deepcopy
 from math import log
 from igraph import *
 
-random.seed(1337)
+np.random.seed(1337)
 
 
 def compute_index(links, index_func, G, G_igraph):
@@ -36,7 +35,7 @@ def compute_index(links, index_func, G, G_igraph):
     """
     scores = []
     for link in links:
-        scores += [index_func(link, G, G_igraph)]
+        scores.append(index_func(link, G, G_igraph))
     return scores
 
 
@@ -92,10 +91,8 @@ def calculate_auc(Ln_scores, Lp_scores):
     chosen negative example (which is what we want from a link prediction index ideally).
     Gives +1 when that is achieved and +0.5 when the scores for pos. and neg. examples are equal.
     """
-    Ln_scores_with_rep = random.choices(
-        list(Ln_scores), k=round(len(Ln_scores)))
-    Lp_scores_with_rep = random.choices(
-        list(Lp_scores), k=round(len(Lp_scores)))
+    Ln_scores_with_rep = np.random.choice(list(Ln_scores), size=len(Ln_scores), replace=True)
+    Lp_scores_with_rep = np.random.choice(list(Lp_scores), size=len(Lp_scores), replace=True)
     m_ = 0
     m__ = 0
 
@@ -142,19 +139,17 @@ def calculate_recall(Ln_scores, Lp_scores, decision_func):
     return tp / len(Lp_cls)
 
 
-def find_edges_after_episode(episode, G):
-    res = set()
-    for edge, edge_episode in nx.get_edge_attributes(G, 'episode').items():
-        if int(edge_episode) > episode:
-            res.add(edge)
-    return res
+def find_edges_by_episode(episode, G, op='in'):
+    # If `op` is 'in', finds edges IN specified episode, else finds edges AFTER specified episode
+    if op == 'in':
+        effective_op = lambda curr_ep: curr_ep == episode
+    else:
+        effective_op = lambda curr_ep: curr_ep > episode
 
-
-def find_edges_in_episode(episode, G):
     res = set()
-    for edge, edge_episode in nx.get_edge_attributes(G, 'episode').items():
-        if int(edge_episode) == episode:
-            res.add(edge)
+    for (killer, victim, _), edge_episode in nx.get_edge_attributes(G, 'episode').items():
+        if effective_op(int(edge_episode)):
+            res.add((killer, victim))
     return res
 
 
@@ -176,22 +171,22 @@ def evaluate_original_distribution(episode, num_samples, G):
     num_neg_samples = num_samples - num_pos_samples
 
     # Sample positives from links after specified episode
-    pos_options = list(find_edges_after_episode(episode - 1, G_orig))
-    pos_samples = random.sample(pos_options, num_pos_samples)
+    pos_options = sorted(find_edges_by_episode(episode - 1, G_orig, op='after'))
+    pos_samples = np.random.choice(pos_options, num_pos_samples, replace=False)
     G_orig.remove_edges_from(pos_samples)
-    pos_samples = set(pos_samples)
 
     # Sample negatives from entire network
     neg_samples = set()
     while len(neg_samples) < num_neg_samples:
-        node1, node2 = random.sample(G_orig.nodes(), 2)
+        node1, node2 = np.random.choice(G_orig.nodes(), 2, replace=False)
+        # node1, node2 = random.sample(G_orig.nodes(), 2)
         if node1 not in G_orig.neighbors(node2) and \
                 node2 not in G_orig.neighbors(node1):
             neg_samples.add((node1, node2))
 
-    # TODO: probably refactor a whole bunch of things
-    # Maybe refactor it so that there is 1 evaluation method, where we just specify different
-    # options
+    # Sort to make results deterministic (no guaranteed order in sets/dicts)
+    neg_samples = sorted(neg_samples)
+    # TODO: some prediction
     print("Sampled {} positive samples and {} negative samples...".format(len(pos_samples),
                                                                           len(neg_samples)))
 
@@ -225,11 +220,12 @@ if __name__ == "__main__":
 
         for episode in range(predict_from_episode, 60 + 1):
             G = deepcopy(G_full)
-            Lp = find_edges_in_episode(episode, G)
-            Lp_after = find_edges_after_episode(episode, G)
+            # Sort to make results deterministic (no guaranteed order in sets/dicts)
+            Lp = sorted(find_edges_by_episode(episode, G, op='in'))
+            Lp_after = sorted(find_edges_by_episode(episode, G, op='after'))
 
-            G.remove_edges_from(list(Lp))
-            G.remove_edges_from(list(Lp_after))
+            G.remove_edges_from(Lp)
+            G.remove_edges_from(Lp_after)
 
             # sending the adjusted graph to iGraph (sorry for hacks)
             nx.write_gml(G, './data/deaths_removededges.gml')
@@ -250,10 +246,13 @@ if __name__ == "__main__":
 
         Ln = set()
         while len(Ln) < len(Lp_predictions['pref']):
-            node1, node2 = random.sample(G_full.nodes(), 2)
+            node1, node2 = np.random.choice(G_orig.nodes(), 2, replace=False)
             if node1 not in G_full.neighbors(node2) and \
                     node2 not in G_full.neighbors(node1):
                 Ln.add((node1, node2))
+
+        # Sort to make results deterministic (no guaranteed order in sets/dicts)
+        Ln = sorted(Ln)
 
         Ln_predictions['pref'] = compute_index(
             Ln, pref_index, G_full, G_igraph)
