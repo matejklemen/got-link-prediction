@@ -1,4 +1,4 @@
-*vertices 262
+*vertices 353
 1 "a member of the Sons of the Harpy" 0.0 0.0 ellipse
 2 "White Rat" 0.0 0.0 ellipse
 3 "Jon Snow" 0.0 0.0 ellipse
@@ -261,6 +261,97 @@
 260 "Catelyn Stark" 0.0 0.0 ellipse
 261 "Joyeuse Erenford" 0.0 0.0 ellipse
 262 "Frey Soldier" 0.0 0.0 ellipse
+263 Aemon 0.0 0.0 ellipse
+264 Samwell 0.0 0.0 ellipse
+265 Aerys 0.0 0.0 ellipse
+266 Jaime 0.0 0.0 ellipse
+267 Robert 0.0 0.0 ellipse
+268 Tyrion 0.0 0.0 ellipse
+269 Tywin 0.0 0.0 ellipse
+270 Alliser 0.0 0.0 ellipse
+271 Mance 0.0 0.0 ellipse
+272 Amory 0.0 0.0 ellipse
+273 Oberyn 0.0 0.0 ellipse
+274 Arya 0.0 0.0 ellipse
+275 Anguy 0.0 0.0 ellipse
+276 Beric 0.0 0.0 ellipse
+277 Bran 0.0 0.0 ellipse
+278 Brynden 0.0 0.0 ellipse
+279 Cersei 0.0 0.0 ellipse
+280 Gendry 0.0 0.0 ellipse
+281 Gregor 0.0 0.0 ellipse
+282 Jon 0.0 0.0 ellipse
+283 Rickon 0.0 0.0 ellipse
+284 Roose 0.0 0.0 ellipse
+285 Sandor 0.0 0.0 ellipse
+286 Thoros 0.0 0.0 ellipse
+287 Balon 0.0 0.0 ellipse
+288 Loras 0.0 0.0 ellipse
+289 Belwas 0.0 0.0 ellipse
+290 Barristan 0.0 0.0 ellipse
+291 Illyrio 0.0 0.0 ellipse
+292 Jojen 0.0 0.0 ellipse
+293 Luwin 0.0 0.0 ellipse
+294 Meera 0.0 0.0 ellipse
+295 Nan 0.0 0.0 ellipse
+296 Theon 0.0 0.0 ellipse
+297 Brienne 0.0 0.0 ellipse
+298 Podrick 0.0 0.0 ellipse
+299 Lothar 0.0 0.0 ellipse
+300 Walder 0.0 0.0 ellipse
+301 Catelyn 0.0 0.0 ellipse
+302 Edmure 0.0 0.0 ellipse
+303 Hoster 0.0 0.0 ellipse
+304 Jeyne 0.0 0.0 ellipse
+305 Petyr 0.0 0.0 ellipse
+306 Robb 0.0 0.0 ellipse
+307 Roslin 0.0 0.0 ellipse
+308 Sansa 0.0 0.0 ellipse
+309 Stannis 0.0 0.0 ellipse
+310 Elia 0.0 0.0 ellipse
+311 Ilyn 0.0 0.0 ellipse
+312 Meryn 0.0 0.0 ellipse
+313 Pycelle 0.0 0.0 ellipse
+314 Varys 0.0 0.0 ellipse
+315 Karl 0.0 0.0 ellipse
+316 Daario 0.0 0.0 ellipse
+317 Drogo 0.0 0.0 ellipse
+318 Aegon 0.0 0.0 ellipse
+319 Jorah 0.0 0.0 ellipse
+320 Kraznys 0.0 0.0 ellipse
+321 Missandei 0.0 0.0 ellipse
+322 Rhaegar 0.0 0.0 ellipse
+323 Viserys 0.0 0.0 ellipse
+324 Worm 0.0 0.0 ellipse
+325 Davos 0.0 0.0 ellipse
+326 Cressen 0.0 0.0 ellipse
+327 Salladhor 0.0 0.0 ellipse
+328 Eddard 0.0 0.0 ellipse
+329 Eddison 0.0 0.0 ellipse
+330 Gilly 0.0 0.0 ellipse
+331 Qyburn 0.0 0.0 ellipse
+332 Renly 0.0 0.0 ellipse
+333 Tommen 0.0 0.0 ellipse
+334 Janos 0.0 0.0 ellipse
+335 Bowen 0.0 0.0 ellipse
+336 Kevan 0.0 0.0 ellipse
+337 Margaery 0.0 0.0 ellipse
+338 Myrcella 0.0 0.0 ellipse
+339 Dalla 0.0 0.0 ellipse
+340 Rattleshirt 0.0 0.0 ellipse
+341 Val 0.0 0.0 ellipse
+342 Lancel 0.0 0.0 ellipse
+343 Olenna 0.0 0.0 ellipse
+344 Marillion 0.0 0.0 ellipse
+345 "Robert Arryn" 0.0 0.0 ellipse
+346 Ellaria 0.0 0.0 ellipse
+347 Mace 0.0 0.0 ellipse
+348 Rickard 0.0 0.0 ellipse
+349 Ramsay 0.0 0.0 ellipse
+350 Chataya 0.0 0.0 ellipse
+351 Shireen 0.0 0.0 ellipse
+352 Doran 0.0 0.0 ellipse
+353 Walton 0.0 0.0 ellipse
 *arcs
 1 2 1.0 episode 41
 3 4 1.0 episode 41
