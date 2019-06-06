@@ -176,7 +176,7 @@ if __name__ == "__main__":
     random_prec, random_rec = [], []
 
     print("Running calculations {} times ...".format(RUNS))
-    predict_from_episode = 50
+    predict_from_episode = 30
 
     for run in range(RUNS):
         print("Run {}...".format(run))
