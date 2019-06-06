@@ -10,6 +10,20 @@ from igraph import *
 np.random.seed(1337)
 
 
+def display_results(name, auc_runs, prec_runs, rec_runs):
+    print('\n----')
+    print('AUC ({})'.format(name))
+    print('\t - Mean:', np.mean(auc_runs))
+    print('\t - Std. deviation:', np.std(auc_runs))
+    print('Precision ({})'.format(name))
+    print('\t - Mean:', np.mean(prec_runs))
+    print('\t - Std. deviation:', np.std(prec_runs))
+    print('Recall ({})'.format(name))
+    print('\t - Mean:', np.mean(rec_runs))
+    print('\t - Std. deviation:', np.std(rec_runs))
+    print('----')
+
+
 def compute_index(links, index_func, G, G_igraph):
     """ Compute index for links, provided in `links`.
 
@@ -196,23 +210,17 @@ if __name__ == "__main__":
     G_orig = nx.read_pajek('./data/deaths.net')
 
     m = G_orig.number_of_edges()
-    # AUCs over several runs
-    pref_scores = []
-    adamic_adar_scores = []
-    leiden_scores = []
-    random_scores = []
+    # AUC, precision and recall over several runs
+    pref_scores, pref_prec, pref_rec = [], [], []
+    adamic_adar_scores, adamic_adar_prec, adamic_adar_rec = [], [], []
+    leiden_scores, leiden_prec, leiden_rec = [], [], []
+    random_scores, random_prec, random_rec = [], [], []
 
-    # Precision and recall over several runs
-    pref_prec, pref_rec = [], []
-    adamic_adar_prec, adamic_adar_rec = [], []
-    leiden_prec, leiden_rec = [], []
-    random_prec, random_rec = [], []
-
-    print("Running calculations {} times ...".format(RUNS))
+    print('Running calculations {} times ...'.format(RUNS))
     predict_from_episode = 30
 
     for run in range(RUNS):
-        print("Run {}...".format(run))
+        print('Run {}...'.format(run))
         G_full = deepcopy(G_orig)
 
         Lp_predictions = {'pref': [], 'aa': [], 'comm': [], 'baseline': []}
@@ -302,47 +310,7 @@ if __name__ == "__main__":
                                            decision_func=(lambda s: s > 0)))
 
     # Print mean results with the standard deviation for all indices
-    print("\n----")
-    print("AUC (Preferential attachment index)")
-    print("\t - Mean:", np.mean(pref_scores))
-    print("\t - Std. deviation:", np.std(pref_scores))
-    print("Precision (Preferential attachment index)")
-    print("\t - Mean:", np.mean(pref_prec))
-    print("\t - Std. deviation:", np.std(pref_prec))
-    print("Recall (Preferential attachment index)")
-    print("\t - Mean:", np.mean(pref_rec))
-    print("\t - Std. deviation:", np.std(pref_rec))
-    print("----")
-
-    print("\nAUC (Adamic-Adar index)")
-    print("\t - Mean:", np.mean(adamic_adar_scores))
-    print("\t - Std. deviation:", np.std(adamic_adar_scores))
-    print("Precision (Adamic-Adar index)")
-    print("\t - Mean:", np.mean(adamic_adar_prec))
-    print("\t - Std. deviation:", np.std(adamic_adar_prec))
-    print("Recall (Adamic-Adar index)")
-    print("\t - Mean:", np.mean(adamic_adar_rec))
-    print("\t - Std. deviation:", np.std(adamic_adar_rec))
-    print("----")
-
-    print("\nAUC (Community index)")
-    print("\t - Mean:", np.mean(leiden_scores))
-    print("\t - Std. deviation:", np.std(leiden_scores))
-    print("Precision (Community index)")
-    print("\t - Mean:", np.mean(leiden_prec))
-    print("\t - Std. deviation:", np.std(leiden_prec))
-    print("Recall (Community index)")
-    print("\t - Mean:", np.mean(leiden_rec))
-    print("\t - Std. deviation:", np.std(leiden_rec))
-    print("----")
-
-    print("\nAUC (Random index)")
-    print("\t - Mean:", np.mean(random_scores))
-    print("\t - Std. deviation:", np.std(random_scores))
-    print("Precision (Random index)")
-    print("\t - Mean:", np.mean(random_prec))
-    print("\t - Std. deviation:", np.std(random_prec))
-    print("Recall (Random index)")
-    print("\t - Mean:", np.mean(random_rec))
-    print("\t - Std. deviation:", np.std(random_rec))
-    print("----")
+    display_results('Preferential attachment index', pref_scores, pref_prec, pref_rec)
+    display_results('Adamic-Adar index', adamic_adar_scores, adamic_adar_prec, adamic_adar_rec)
+    display_results('Community index', leiden_scores, leiden_prec, leiden_rec)
+    display_results('Random index', random_scores, random_prec, random_rec)
