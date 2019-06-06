@@ -180,8 +180,8 @@ def evaluate_original_distribution(episode, num_samples, G):
     while len(neg_samples) < num_neg_samples:
         node1, node2 = np.random.choice(G_orig.nodes(), 2, replace=False)
         # node1, node2 = random.sample(G_orig.nodes(), 2)
-        if node1 not in G_orig.neighbors(node2) and \
-                node2 not in G_orig.neighbors(node1):
+        if node1 not in nx.all_neighbors(G_orig, node2) and \
+                node2 not in nx.all_neighbors(G_orig, node1):
             neg_samples.add((node1, node2))
 
     # Sort to make results deterministic (no guaranteed order in sets/dicts)
@@ -247,8 +247,8 @@ if __name__ == "__main__":
         Ln = set()
         while len(Ln) < len(Lp_predictions['pref']):
             node1, node2 = np.random.choice(G_orig.nodes(), 2, replace=False)
-            if node1 not in G_full.neighbors(node2) and \
-                    node2 not in G_full.neighbors(node1):
+            if node1 not in nx.all_neighbors(G_full, node2) and \
+                    node2 not in nx.all_neighbors(G_full, node1):
                 Ln.add((node1, node2))
 
         # Sort to make results deterministic (no guaranteed order in sets/dicts)
