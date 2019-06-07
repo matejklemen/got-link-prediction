@@ -154,9 +154,13 @@ def calculate_recall(Ln_scores, Lp_scores, decision_func):
 
 
 def find_edges_by_episode(episode, G, op='in'):
-    # If `op` is 'in', finds edges IN specified episode, else finds edges AFTER specified episode
+    # If `op` is 'in', finds edges IN specified episode,
+    # if `op` is 'before', finds edges BEFORE specified episode,
+    # else finds edges AFTER specified episode
     if op == 'in':
         effective_op = lambda curr_ep: curr_ep == episode
+    elif op == 'before':
+        effective_op = lambda curr_ep: curr_ep < episode
     else:
         effective_op = lambda curr_ep: curr_ep > episode
 
@@ -165,6 +169,18 @@ def find_edges_by_episode(episode, G, op='in'):
         if effective_op(int(edge_episode)):
             res.add((killer, victim))
     return res
+
+
+def sample_negative_examples(G, num_neg_samples):
+    # Sample negatives from entire network
+    neg_samples = set()
+    while len(neg_samples) < num_neg_samples:
+        node1, node2 = np.random.choice(G.nodes(), 2, replace=False)
+        if node1 not in nx.all_neighbors(G, node2) and \
+                node2 not in nx.all_neighbors(G, node1):
+            neg_samples.add((node1, node2))
+
+    return neg_samples
 
 
 def evaluate_original_distribution(episode, num_samples, G):
@@ -190,16 +206,9 @@ def evaluate_original_distribution(episode, num_samples, G):
     G_orig.remove_edges_from(pos_samples)
 
     # Sample negatives from entire network
-    neg_samples = set()
-    while len(neg_samples) < num_neg_samples:
-        node1, node2 = np.random.choice(G_orig.nodes(), 2, replace=False)
-        # node1, node2 = random.sample(G_orig.nodes(), 2)
-        if node1 not in nx.all_neighbors(G_orig, node2) and \
-                node2 not in nx.all_neighbors(G_orig, node1):
-            neg_samples.add((node1, node2))
-
     # Sort to make results deterministic (no guaranteed order in sets/dicts)
-    neg_samples = sorted(neg_samples)
+    neg_samples = sorted(sample_negative_examples(G_orig, num_neg_samples))
+
     # TODO: some prediction
     print("Sampled {} positive samples and {} negative samples...".format(len(pos_samples),
                                                                           len(neg_samples)))
@@ -252,15 +261,8 @@ if __name__ == "__main__":
         nx.write_gml(G_full, './data/deaths_removededges.gml')
         G_igraph = Graph.Read_GML('./data/deaths_removededges.gml')
 
-        Ln = set()
-        while len(Ln) < len(Lp_predictions['pref']):
-            node1, node2 = np.random.choice(G_orig.nodes(), 2, replace=False)
-            if node1 not in nx.all_neighbors(G_full, node2) and \
-                    node2 not in nx.all_neighbors(G_full, node1):
-                Ln.add((node1, node2))
-
         # Sort to make results deterministic (no guaranteed order in sets/dicts)
-        Ln = sorted(Ln)
+        Ln = sorted(sample_negative_examples(G_orig, len(Lp_predictions['pref'])))
 
         Ln_predictions['pref'] = compute_index(
             Ln, pref_index, G_full, G_igraph)
