@@ -2,6 +2,7 @@ import leidenalg
 
 import networkx as nx
 import numpy as np
+import pandas as pd
 
 from copy import deepcopy
 from math import log
@@ -12,6 +13,10 @@ from sklearn.svm import SVC
 
 np.random.seed(1337)
 
+net_feats = pd.read_csv('./data/additional_character_features.csv')
+pagerank_mean = net_feats['PageRank'].mean()
+betweenness_mean = net_feats['Betweenness'].mean()
+dummy_community = net_feats['Community'].max() + 1
 
 def display_results(name, auc_runs, prec_runs, rec_runs):
     print('\n----')
@@ -186,10 +191,29 @@ def sample_negative_examples(G, num_neg_samples):
     return neg_samples
 
 
+def get_additional_features(character):
+    """
+    Gets additional features (PageRank, Betweenness, Community)
+    from the additional_character_features.csv file, computed on the social network
+    of Game of Thrones characters from the book.
+    """
+    for short_name in net_feats['Character']:
+        if character.startswith(short_name):
+            # if the short_name is the start of the full character's name
+            # we can assume that it is the same character
+            character_row = net_feats.loc[net_feats['Character'] == short_name]
+            return float(character_row['PageRank']), float(character_row['Betweenness']), int(character_row['Community'])
+
+    # no character found in the additional features dataset, we use the means and the most popular community
+    return pagerank_mean, betweenness_mean, dummy_community
+    
+
 def extract_features(G, edge):
-    # TODO: features for classifiers are to be extracted here (currently out-degree)
     u, v = edge[0], edge[1]
-    return [G.out_degree(u), G.out_degree(v)]
+    u_pagerank, u_betweenness, u_community = get_additional_features(u)
+    v_pagerank, v_betweenness, v_community = get_additional_features(v)
+    
+    return [G.out_degree(u), G.out_degree(v), u_pagerank, u_betweenness, u_community, v_pagerank, v_betweenness, v_community]
 
 
 def ml_approach(G, episode, models=None):
