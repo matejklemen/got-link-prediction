@@ -6,6 +6,9 @@ import numpy as np
 from copy import deepcopy
 from math import log
 from igraph import *
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
 
 np.random.seed(1337)
 
@@ -183,6 +186,104 @@ def sample_negative_examples(G, num_neg_samples):
     return neg_samples
 
 
+def extract_features(G, edge):
+    # TODO: features for classifiers are to be extracted here (currently out-degree)
+    u, v = edge[0], edge[1]
+    return [G.out_degree(u), G.out_degree(v)]
+
+
+def ml_approach(G, episode, models=None):
+    """ How this works:
+    [1. Prediction for positive samples]
+    - set each episode in range [episode, 60] as threshold for getting examples
+        - take kills from episode that is currently set as thresh (= current TEST SET)
+        - take kills from episodes prior to the current thresh
+        - sample as many negative examples as there are kills obtained in previous step
+        - this way we get a balanced (50% kills, 50% non-kills) training set
+
+    [2. Prediction for negative samples]
+    - take all kills in the network
+    - sample the same amount of negative examples
+    - again, we have a balanced training set
+    - test set here contains as many negative examples as there were positive examples in [1.]
+
+    Note that multiple models can be evaluated on these examples in one run of function
+    (to make sure that some model does not get a lucky break and get a higher score that way).
+
+    Parameters:
+        models: List of instances of models, on which we want to evaluate the approach.
+                For example, using logistic regression and SVM:
+                >>> m1, m2 = LogisticRegression(), SVC()
+                >>> ml_approach(..., ..., [m1, m2])
+
+    Returns:
+        List of pairs (Lp_scores, Ln_scores) for each classifier, specified in `models`.
+    """
+    if models is None:
+        model = KNeighborsClassifier()
+        models = [model]
+
+    Lp_preds = [[] for _ in models]
+    Ln_preds = [[] for _ in models]
+    for curr_episode_thresh in range(episode, 60 + 1):
+        G_copy = deepcopy(G)
+        Lp_train = sorted(find_edges_by_episode(curr_episode_thresh, G_copy, op='before'))
+        Ln_train = sorted(sample_negative_examples(G_copy, len(Lp_train)))
+
+        Lp_test = sorted(find_edges_by_episode(curr_episode_thresh, G_copy, op='in'))
+        # Episode with no kills, i.e. nothing to predict
+        if len(Lp_test) == 0:
+            continue
+        Lp_after_ep = sorted(find_edges_by_episode(curr_episode_thresh, G_copy, op='after'))
+
+        G_copy.remove_edges_from(Lp_test)
+        G_copy.remove_edges_from(Lp_after_ep)
+
+        # Extract features for training and test examples
+        X_train = [extract_features(G_copy, curr_example) for curr_example in Lp_train]
+        y_train = [1 for _ in range(len(Lp_train))]
+        X_train.extend([extract_features(G_copy, curr_example) for curr_example in Ln_train])
+        y_train.extend([0 for _ in range(len(Ln_train))])
+        X_test = [extract_features(G_copy, curr_example) for curr_example in Lp_test]
+
+        # Make sure we have 2D arrays (could otherwise be problematic if there's only 1 test case)
+        X_train = np.atleast_2d(X_train)
+        X_test = np.atleast_2d(X_test)
+
+        for i, curr_model in enumerate(models):
+            curr_model.fit(X_train, y_train)
+            preds = curr_model.predict_proba(X_test)
+            preds = preds[:, 1]
+            Lp_preds[i].extend(preds)
+
+    G_copy = deepcopy(G)
+    Lp_train = sorted(find_edges_by_episode(60 + 1, G_copy, op='before'))
+    neg_examples = sorted(sample_negative_examples(G_copy, len(Lp_train) + len(Lp_preds[0])))
+    np.random.shuffle(neg_examples)
+    Ln_train = neg_examples[: len(Lp_train)]
+    Ln_test = neg_examples[len(Lp_train):]
+
+    # Extract features for training and test examples
+    X_train = [extract_features(G_copy, curr_example) for curr_example in Lp_train]
+    y_train = [1 for _ in range(len(Lp_train))]
+    X_train.extend([extract_features(G_copy, curr_example) for curr_example in Ln_train])
+    y_train.extend([0 for _ in range(len(Ln_train))])
+    X_test = [extract_features(G_copy, curr_example) for curr_example in Ln_test]
+
+    for i, curr_model in enumerate(models):
+        curr_model.fit(X_train, y_train)
+        curr_preds = curr_model.predict_proba(X_test)
+        curr_preds = curr_preds[:, 1]
+
+        # Take probabilities of the positive class as scores -
+        # if example is predicted to be positive (kill), this score will be high
+        # if example is predicted to be negative (no kill), this score will be low
+        Ln_preds[i].extend(curr_preds)
+
+    Lp_Ln_preds = list(zip(Lp_preds, Ln_preds))
+    return Lp_Ln_preds
+
+
 def evaluate_original_distribution(episode, num_samples, G):
     """ Evaluate methods on original (highly unbalanced) distribution.
     How this works:
@@ -224,6 +325,9 @@ if __name__ == "__main__":
     adamic_adar_scores, adamic_adar_prec, adamic_adar_rec = [], [], []
     leiden_scores, leiden_prec, leiden_rec = [], [], []
     random_scores, random_prec, random_rec = [], [], []
+    knn_scores, knn_prec, knn_rec = [], [], []
+    logr_scores, logr_prec, logr_rec = [], [], []
+    svm_scores, svm_prec, svm_rec = [], [], []
 
     print('Running calculations {} times ...'.format(RUNS))
     predict_from_episode = 30
@@ -273,6 +377,14 @@ if __name__ == "__main__":
         Ln_predictions['baseline'] = compute_index(
             Ln, baseline_index, G_full, G_igraph)
 
+        G_copy = deepcopy(G_orig)
+        m1 = KNeighborsClassifier()
+        m2 = LogisticRegression(solver='liblinear')
+        m3 = SVC(probability=True, gamma='auto')
+
+        (Lp_preds_knn, Ln_preds_knn), (Lp_preds_logr, Ln_preds_logr),  (Lp_preds_svm, Ln_preds_svm) = \
+            ml_approach(G_copy, episode=predict_from_episode, models=[m1, m2, m3])
+
         pref_scores.append(calculate_auc(
             Ln_predictions['pref'], Lp_predictions['pref']))
         adamic_adar_scores.append(calculate_auc(
@@ -281,6 +393,9 @@ if __name__ == "__main__":
             Ln_predictions['comm'], Lp_predictions['comm']))
         random_scores.append(calculate_auc(
             Ln_predictions['baseline'], Lp_predictions['baseline']))
+        knn_scores.append(calculate_auc(Ln_preds_knn, Lp_preds_knn))
+        logr_scores.append(calculate_auc(Ln_preds_logr, Lp_preds_logr))
+        svm_scores.append(calculate_auc(Ln_preds_svm, Lp_preds_svm))
 
         # Inverting classifier decisions with function `s < 0` to get valid AUC (>= 0.5)
         pref_prec.append(calculate_precision(Ln_predictions['pref'],
@@ -311,8 +426,26 @@ if __name__ == "__main__":
                                            Lp_predictions['baseline'],
                                            decision_func=(lambda s: s > 0)))
 
+        knn_prec.append(calculate_precision(Ln_preds_knn, Lp_preds_knn,
+                                            decision_func=(lambda s: s > 0.5)))
+        knn_rec.append(calculate_recall(Ln_preds_knn, Lp_preds_knn,
+                                        decision_func=(lambda s: s > 0.5)))
+
+        logr_prec.append(calculate_precision(Ln_preds_logr, Lp_preds_logr,
+                                             decision_func=(lambda s: s > 0.5)))
+        logr_rec.append(calculate_recall(Ln_preds_logr, Lp_preds_logr,
+                                         decision_func=(lambda s: s > 0.5)))
+
+        svm_prec.append(calculate_precision(Ln_preds_svm, Lp_preds_svm,
+                                            decision_func=(lambda s: s > 0.5)))
+        svm_rec.append(calculate_recall(Ln_preds_svm, Lp_preds_svm,
+                                        decision_func=(lambda s: s > 0.5)))
+
     # Print mean results with the standard deviation for all indices
     display_results('Preferential attachment index', pref_scores, pref_prec, pref_rec)
     display_results('Adamic-Adar index', adamic_adar_scores, adamic_adar_prec, adamic_adar_rec)
     display_results('Community index', leiden_scores, leiden_prec, leiden_rec)
     display_results('Random index', random_scores, random_prec, random_rec)
+    display_results('ML (KNN)', knn_scores, knn_prec, knn_rec)
+    display_results('ML (logistic reg.)', logr_scores, logr_prec, logr_rec)
+    display_results('ML (SVM)', svm_scores, svm_prec, svm_rec)
