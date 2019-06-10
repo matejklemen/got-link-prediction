@@ -1,0 +1,90 @@
+Running calculations 5 times ...
+Run 0...
+Run 1...
+Run 2...
+Run 3...
+Run 4...
+
+----
+AUC (Preferential attachment index)
+	 - Mean: 0.5035087719298247
+	 - Std. deviation: 0.02376529330551592
+Precision (Preferential attachment index)
+	 - Mean: 0.522564745196324
+	 - Std. deviation: 0.11322182977784606
+Recall (Preferential attachment index)
+	 - Mean: 0.08771929824561403
+	 - Std. deviation: 0.0
+----
+
+----
+AUC (Adamic-Adar index)
+	 - Mean: 0.5
+	 - Std. deviation: 0.0
+Precision (Adamic-Adar index)
+	 - Mean: 0.0
+	 - Std. deviation: 0.0
+Recall (Adamic-Adar index)
+	 - Mean: 0.0
+	 - Std. deviation: 0.0
+----
+
+----
+AUC (Community index)
+	 - Mean: 0.5
+	 - Std. deviation: 0.0
+Precision (Community index)
+	 - Mean: 0.0
+	 - Std. deviation: 0.0
+Recall (Community index)
+	 - Mean: 0.0
+	 - Std. deviation: 0.0
+----
+
+----
+AUC (Random index)
+	 - Mean: 0.8631578947368421
+	 - Std. deviation: 0.03239681633792877
+Precision (Random index)
+	 - Mean: 0.8221862244205909
+	 - Std. deviation: 0.019616316296375107
+Recall (Random index)
+	 - Mean: 0.9298245614035088
+	 - Std. deviation: 0.0
+----
+
+----
+AUC (ML (KNN))
+	 - Mean: 0.6587719298245615
+	 - Std. deviation: 0.03491183989847789
+Precision (ML (KNN))
+	 - Mean: 0.7250937895255858
+	 - Std. deviation: 0.0166759374141855
+Recall (ML (KNN))
+	 - Mean: 0.4526315789473684
+	 - Std. deviation: 0.004297350425935387
+----
+
+----
+AUC (ML (logistic reg.))
+	 - Mean: 0.6578947368421052
+	 - Std. deviation: 0.0332871332649303
+Precision (ML (logistic reg.))
+	 - Mean: 0.8158164425816817
+	 - Std. deviation: 0.016303223168954682
+Recall (ML (logistic reg.))
+	 - Mean: 0.4175438596491228
+	 - Std. deviation: 0.013128622409733125
+----
+
+----
+AUC (ML (SVM))
+	 - Mean: 0.6859649122807018
+	 - Std. deviation: 0.058292097283635616
+Precision (ML (SVM))
+	 - Mean: 0.719092399809485
+	 - Std. deviation: 0.02775139432107211
+Recall (ML (SVM))
+	 - Mean: 0.45614035087719296
+	 - Std. deviation: 0.005547855544155052
+----
