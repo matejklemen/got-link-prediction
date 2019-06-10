@@ -96,16 +96,28 @@ def leiden_index(link, G_nx, G):
     u = G.vs.find(label=link[0])
     v = G.vs.find(label=link[1])
 
-    if leiden_partitions[current_graph_id].membership[u.index] == \
-            leiden_partitions[current_graph_id].membership[v.index]:
-        nc = leiden_partitions[current_graph_id].size(
-            leiden_partitions[current_graph_id].membership[u.index])
-        mc = leiden_partitions[current_graph_id].total_weight_from_comm(
-            leiden_partitions[current_graph_id].membership[u.index])
+    u_community = leiden_partitions[current_graph_id].membership[u.index]
+    v_community = leiden_partitions[current_graph_id].membership[v.index]
+
+    if u_community == v_community:
+        nc = leiden_partitions[current_graph_id].size(u_community)
+        mc = leiden_partitions[current_graph_id].total_weight_from_comm(u_community)
 
         return mc / (nc * (nc - 1) / 2)
     else:
-        return 0
+        # count links between communities
+
+        nodes_in_u_community = [i for i, x in enumerate(leiden_partitions[current_graph_id].membership) if x == u_community]
+        nodes_in_v_community = {i for i, x in enumerate(leiden_partitions[current_graph_id].membership) if x == v_community}
+
+        links_between_communities = 0
+        for node in nodes_in_u_community:
+            for edge_id in G.incident(G.vs[node]):
+                _, target = G.es[edge_id].tuple
+                if target in nodes_in_v_community:
+                    links_between_communities += 1
+
+        return links_between_communities / (len(nodes_in_u_community) * len(nodes_in_v_community))
 
 
 def calculate_auc(Ln_scores, Lp_scores):
