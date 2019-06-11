@@ -21,6 +21,18 @@ To repeat our calculations, simply run `link_prediction.py`.
 $ python3 link_prediction.py
 ```
 
+## Results
+
+| Approach  	                         | AUC (std. dev.)  | Precision (std. dev.) | Recall (std. dev.) |
+|:--------------------------------------:|:----------------:|:---------------------:|:------------------:|
+| Preferential attachment index          | 0.500 (0.020)    | 0.522 (0.113)         | 0.087 (0.000)      |
+| Adamic-Adar index                      | 0.500 (0.000)    | 0.000 (0.000)         | 0.000 (0.000)      |
+| Community index                        | 0.500 (0.000)    | 0.000 (0.000)         | 0.000 (0.000)      |
+| Alive index                            | **0.863 (0.032)**| 0.822 (0.020)         | 0.930 (0.000)      |
+| K-Nearest-Neighbors                    | 0.659 (0.035)    | 0.725 (0.016)         | 0.435 (0.004)      |
+| Logistic Regression                    | 0.658 (0.033)    | 0.816 (0.016)         | 0.418 (0.013)      |
+| SVM                                    | 0.686 (0.058)    | 0.719 (0.058)         | 0.456 (0.056)      |
+
 ## Possible TODO:
 - add a results section? or
 - add pdf of paper (after it is "final")
