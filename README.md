@@ -33,6 +33,5 @@ $ python3 link_prediction.py
 | Logistic Regression                    | 0.658 (0.033)    | 0.816 (0.016)         | 0.418 (0.013)      |
 | SVM                                    | 0.686 (0.058)    | 0.719 (0.058)         | 0.456 (0.056)      |
 
-## Possible TODO:
-- add a results section? or
+## TODO:
 - add pdf of paper (after it is "final")
