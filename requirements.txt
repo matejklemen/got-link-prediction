@@ -1,0 +1,6 @@
+numpy
+pandas
+sklearn
+leidenalg
+networkx
+python-igraph
