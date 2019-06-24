@@ -9,6 +9,9 @@ they are connected if one character killed the other,
 - a *social network* - nodes are characters and are connected if they appear closely in the books
 (used as auxiliary data; obtained from https://github.com/melaniewalsh/sample-social-network-datasets/).
 
+The paper and slides with a quick description of the problem and solutions are available in the root of the
+project in PDF format.
+
 ## Running the code
 First, make sure that you have installed the packages inside `requirements.txt`.
 One way to do this is with the following command.
@@ -32,6 +35,3 @@ $ python3 link_prediction.py
 | K-Nearest-Neighbors                    | 0.659 (0.035)    | 0.725 (0.016)         | 0.435 (0.004)      |
 | Logistic Regression                    | 0.658 (0.033)    | 0.816 (0.016)         | 0.418 (0.013)      |
 | SVM                                    | 0.686 (0.058)    | 0.719 (0.058)         | 0.456 (0.056)      |
-
-## TODO:
-- add pdf of paper (after it is "final")
