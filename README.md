@@ -10,7 +10,8 @@ they are connected if one character killed the other,
 (used as auxiliary data; obtained from https://github.com/melaniewalsh/sample-social-network-datasets/).
 
 The paper and slides with a quick description of the problem and solutions are available in the root of the
-project in PDF format.
+project in PDF format. 
+The paper is also available on arXiv: https://arxiv.org/abs/1906.09468. 
 
 ## Running the code
 First, make sure that you have installed the packages inside `requirements.txt`.
