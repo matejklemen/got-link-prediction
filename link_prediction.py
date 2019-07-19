@@ -18,6 +18,7 @@ pagerank_mean = net_feats['PageRank'].mean()
 betweenness_mean = net_feats['Betweenness'].mean()
 dummy_community = net_feats['Community'].max() + 1
 
+
 def display_results(name, auc_runs, prec_runs, rec_runs):
     print('\n----')
     print('AUC ({})'.format(name))
@@ -106,7 +107,6 @@ def leiden_index(link, G_nx, G):
         return mc / (nc * (nc - 1) / 2)
     else:
         # count links between communities
-
         nodes_in_u_community = [i for i, x in enumerate(leiden_partitions[current_graph_id].membership) if x == u_community]
         nodes_in_v_community = {i for i, x in enumerate(leiden_partitions[current_graph_id].membership) if x == v_community}
 
@@ -318,37 +318,6 @@ def ml_approach(G, episode, models=None):
 
     Lp_Ln_preds = list(zip(Lp_preds, Ln_preds))
     return Lp_Ln_preds
-
-
-def evaluate_original_distribution(episode, num_samples, G):
-    """ Evaluate methods on original (highly unbalanced) distribution.
-    How this works:
-    1.) Calculate density of directed network.
-    2.) Sample density * num_samples positive examples that appear >= ep. `episode`
-    3.) Sample `(num_samples - num_pos_ex)` negative examples from entire network.
-
-    Parameters
-    ----------
-    TODO: after this function is finished
-    """
-    m, n = G.number_of_edges(), G.number_of_nodes()
-    density = m / (n * (n - 1))
-    # ceil because we want to get to sample at least 1 positive example
-    num_pos_samples = min(num_samples, int(np.ceil(density * m)))
-    num_neg_samples = num_samples - num_pos_samples
-
-    # Sample positives from links after specified episode
-    pos_options = sorted(find_edges_by_episode(episode - 1, G_orig, op='after'))
-    pos_samples = np.random.choice(pos_options, num_pos_samples, replace=False)
-    G_orig.remove_edges_from(pos_samples)
-
-    # Sample negatives from entire network
-    # Sort to make results deterministic (no guaranteed order in sets/dicts)
-    neg_samples = sorted(sample_negative_examples(G_orig, num_neg_samples))
-
-    # TODO: some prediction
-    print("Sampled {} positive samples and {} negative samples...".format(len(pos_samples),
-                                                                          len(neg_samples)))
 
 
 if __name__ == "__main__":
