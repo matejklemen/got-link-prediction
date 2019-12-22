@@ -20,17 +20,10 @@ dummy_community = net_feats['Community'].max() + 1
 
 
 def display_results(name, auc_runs, prec_runs, rec_runs):
-    print('\n----')
-    print('AUC ({})'.format(name))
-    print('\t - Mean:', np.mean(auc_runs))
-    print('\t - Std. deviation:', np.std(auc_runs))
-    print('Precision ({})'.format(name))
-    print('\t - Mean:', np.mean(prec_runs))
-    print('\t - Std. deviation:', np.std(prec_runs))
-    print('Recall ({})'.format(name))
-    print('\t - Mean:', np.mean(rec_runs))
-    print('\t - Std. deviation:', np.std(rec_runs))
-    print('----')
+    print(f"{name}:")
+    print(f"[AUC] {np.mean(auc_runs):.3f} +- {np.std(auc_runs):.3f}", end=" | ")
+    print(f"[prec.] {np.mean(prec_runs):.3f} +- {np.std(prec_runs):.3f}", end=" | ")
+    print(f"[rec.] {np.mean(rec_runs):.3f} +- {np.std(rec_runs):.3f}")
 
 
 def compute_index(links, index_func, G, G_igraph):
@@ -62,33 +55,58 @@ def compute_index(links, index_func, G, G_igraph):
     return scores
 
 
-def pref_index(link, G, G_igraph):
-    """ Preferential attachment index. """
-    # Multiply with -1 to "invert" classifier decision (to avoid invalid AUC)
-    return - G.out_degree(link[0]) * G.out_degree(link[1])
+def pref_index(link, G, G_igraph, use_death_info=False):
+    """ Preferential attachment index. If `use_death_info` is True, additional check will be performed prior to
+    index calculation: if the alleged perpetrator and alleged victim are both dead, the index score will be -inf.
+
+    Higher score implies higher likelihood of a positive outcome.
+    """
+    if use_death_info:
+        # src dead and/or dst dead => src can't kill dst
+        if G.in_degree(link[0]) > 0 or G.in_degree(link[1]) > 0:
+            return -float("inf")
+
+    return G.out_degree(link[0]) * G.out_degree(link[1])
 
 
-def adamic_adar_index(link, G, G_igraph):
-    """ Adamic-Adar index. """
+def adamic_adar_index(link, G, G_igraph, use_death_info=False):
+    """ Adamic-Adar index. If `use_death_info` is True, additional check will be performed prior to index calculation:
+    if the alleged perpetrator and alleged victim are both dead, the index will be -inf.
+
+    Higher score implies higher likelihood of a positive outcome.
+    """
+    if use_death_info:
+        # src dead and/or dst dead => src can't kill dst
+        if G.in_degree(link[0]) > 0 or G.in_degree(link[1]) > 0:
+            return -float("inf")
+
     return sum([1 / float(log(G.degree(neighbor)))
                 for neighbor in (set(nx.neighbors(G, link[0])) & set(nx.neighbors(G, link[1])))])
 
 
 def baseline_index(link, G, G_igraph):
-    """ Baseline index, which predicts 1 if both endpoints of a link have an in-degree of 0,
-    and 1 otherwise.
+    """ Baseline index, which predicts 1.0 if both endpoints of a link have an in-degree of 0,
+    and 0.0 otherwise.
     """
     if G.in_degree(link[0]) == 0 and G.in_degree(link[1]) == 0:
         return 1.0
     else:
-        return 0.0
+        return 0.0 - 10e-5
 
 
 leiden_partitions = {}
 
 
-def leiden_index(link, G_nx, G):
-    """ Community index, based on communities, detected by Leiden algorithm. """
+def leiden_index(link, G_nx, G, use_death_info=False):
+    """ Community index, based on communities, detected by Leiden algorithm.
+
+    Higher score implies higher likelihood of a positive outcome.
+    """
+    if use_death_info:
+        # src dead and/or dst dead => src can't kill dst
+        if G_nx.in_degree(link[0]) > 0 or G_nx.in_degree(link[1]) > 0:
+            return -float("inf")
+
     global leiden_partitions
     current_graph_id = hash(G_nx.number_of_nodes())
     if current_graph_id not in leiden_partitions:
@@ -140,11 +158,13 @@ def calculate_auc(Ln_scores, Lp_scores):
 
 
 def calculate_precision(Ln_scores, Lp_scores, decision_func):
-    # `Ln_scores` and `Lp_scores` are (possibly unnormalized) scores returned by methods
-    # `decision_func` is a function that takes a score and returns 1 if score represents a positive
-    # example and 0 otherwise
+    """ Calculate precision = |tp| / (|tp| + |fp|)
 
-    # 1 = pos., 0 = neg. classification
+    Parameters
+    ----------
+    decision_func: function
+        Function that converts scores into 0/1 (neg/pos) outcome (e.g. `lambda score: score > 0.5`)
+    """
     Lp_cls = [decision_func(score) for score in Lp_scores]
     Ln_cls = [decision_func(score) for score in Ln_scores]
 
@@ -160,14 +180,15 @@ def calculate_precision(Ln_scores, Lp_scores, decision_func):
 
 
 def calculate_recall(Ln_scores, Lp_scores, decision_func):
-    # `Ln_scores` and `Lp_scores` are (possibly unnormalized) scores returned by methods
-    # `decision_func` is a function that takes a score and returns 1 if score represents a positive
-    # example and 0 otherwise
+    """ Calculate recall = |tp| / (|tp| + |fn|) = |tp| / |pos|
 
-    # 1 = pos., 0 = neg. classification
+    Parameters
+    ----------
+    decision_func: function
+        Function that converts scores into 0/1 (neg/pos) outcome (e.g. `lambda score: score > 0.5`)
+    """
+    # Number of TPs = number of 1s in list of predicted classes for actual POSITIVE examples
     Lp_cls = [decision_func(score) for score in Lp_scores]
-
-    # Number of tps = number of 1s in list of predicted classes for actual POSITIVE examples
     tp = sum(Lp_cls)
 
     return tp / len(Lp_cls)
@@ -327,8 +348,11 @@ if __name__ == "__main__":
     m = G_orig.number_of_edges()
     # AUC, precision and recall over several runs
     pref_scores, pref_prec, pref_rec = [], [], []
+    prefd_scores, prefd_prec, prefd_rec = [], [], []
     adamic_adar_scores, adamic_adar_prec, adamic_adar_rec = [], [], []
+    aad_scores, aad_prec, aad_rec = [], [], []
     leiden_scores, leiden_prec, leiden_rec = [], [], []
+    ld_scores, ld_prec, ld_rec = [], [], []
     random_scores, random_prec, random_rec = [], [], []
     knn_scores, knn_prec, knn_rec = [], [], []
     logr_scores, logr_prec, logr_rec = [], [], []
@@ -341,8 +365,8 @@ if __name__ == "__main__":
         print('Run {}...'.format(run))
         G_full = deepcopy(G_orig)
 
-        Lp_predictions = {'pref': [], 'aa': [], 'comm': [], 'baseline': []}
-        Ln_predictions = {'pref': [], 'aa': [], 'comm': [], 'baseline': []}
+        Lp_predictions = {'pref': [], 'pref-death': [], 'aa': [], 'aa-death': [], 'comm': [], 'comm-death': [], 'baseline': []}
+        Ln_predictions = {'pref': [], 'pref-death': [], 'aa': [], 'aa-death': [], 'comm': [], 'comm-death': [], 'baseline': []}
 
         for episode in range(predict_from_episode, 60 + 1):
             G = deepcopy(G_full)
@@ -359,10 +383,16 @@ if __name__ == "__main__":
 
             Lp_predictions['pref'].extend(
                 compute_index(Lp, pref_index, G, G_igraph))
+            Lp_predictions['pref-death'].extend(
+                compute_index(Lp, lambda link, G, G_ig: pref_index(link, G, G_ig, use_death_info=True), G, G_igraph))
             Lp_predictions['aa'].extend(compute_index(
                 Lp, adamic_adar_index, G, G_igraph))
+            Lp_predictions['aa-death'].extend(compute_index(
+                Lp, lambda link, G, G_ig: adamic_adar_index(link, G, G_ig, use_death_info=True), G, G_igraph))
             Lp_predictions['comm'].extend(
                 compute_index(Lp, leiden_index, G, G_igraph))
+            Lp_predictions['comm-death'].extend(
+                compute_index(Lp, lambda link, G, G_ig: leiden_index(link, G, G_igraph, use_death_info=True), G, G_igraph))
             Lp_predictions['baseline'].extend(
                 compute_index(Lp, baseline_index, G, G_igraph))
 
@@ -375,10 +405,16 @@ if __name__ == "__main__":
 
         Ln_predictions['pref'] = compute_index(
             Ln, pref_index, G_full, G_igraph)
+        Ln_predictions['pref-death'] = compute_index(
+            Ln, lambda link, G, G_ig: pref_index(link, G, G_ig, use_death_info=True), G_full, G_igraph)
         Ln_predictions['aa'] = compute_index(
             Ln, adamic_adar_index, G_full, G_igraph)
+        Ln_predictions['aa-death'] = compute_index(
+            Ln, lambda link, G, G_ig: adamic_adar_index(link, G, G_ig, use_death_info=True), G_full, G_igraph)
         Ln_predictions['comm'] = compute_index(
             Ln, leiden_index, G_full, G_igraph)
+        Ln_predictions['comm-death'] = compute_index(
+            Ln, lambda link, G, G_ig: leiden_index(link, G, G_ig, use_death_info=True), G_full, G_igraph)
         Ln_predictions['baseline'] = compute_index(
             Ln, baseline_index, G_full, G_igraph)
 
@@ -392,10 +428,16 @@ if __name__ == "__main__":
 
         pref_scores.append(calculate_auc(
             Ln_predictions['pref'], Lp_predictions['pref']))
+        prefd_scores.append(calculate_auc(
+            Ln_predictions['pref-death'], Lp_predictions['pref-death']))
         adamic_adar_scores.append(calculate_auc(
             Ln_predictions['aa'], Lp_predictions['aa']))
+        aad_scores.append(calculate_auc(
+            Ln_predictions['aa-death'], Lp_predictions['aa-death']))
         leiden_scores.append(calculate_auc(
             Ln_predictions['comm'], Lp_predictions['comm']))
+        ld_scores.append(calculate_auc(
+            Ln_predictions['comm-death'], Lp_predictions['comm-death']))
         random_scores.append(calculate_auc(
             Ln_predictions['baseline'], Lp_predictions['baseline']))
         knn_scores.append(calculate_auc(Ln_preds_knn, Lp_preds_knn))
@@ -405,10 +447,17 @@ if __name__ == "__main__":
         # Inverting classifier decisions with function `s < 0` to get valid AUC (>= 0.5)
         pref_prec.append(calculate_precision(Ln_predictions['pref'],
                                              Lp_predictions['pref'],
-                                             decision_func=(lambda s: s < 0)))
+                                             decision_func=(lambda s: s > 0)))
         pref_rec.append(calculate_recall(Ln_predictions['pref'],
                                          Lp_predictions['pref'],
-                                         decision_func=(lambda s: s < 0)))
+                                         decision_func=(lambda s: s > 0)))
+
+        prefd_prec.append(calculate_precision(Ln_predictions['pref-death'],
+                                              Lp_predictions['pref-death'],
+                                              decision_func=(lambda s: s > 0)))
+        prefd_rec.append(calculate_recall(Ln_predictions['pref-death'],
+                                          Lp_predictions['pref-death'],
+                                          decision_func=(lambda s: s > 0)))
 
         adamic_adar_prec.append(calculate_precision(Ln_predictions['aa'],
                                                     Lp_predictions['aa'],
@@ -417,12 +466,26 @@ if __name__ == "__main__":
                                                 Lp_predictions['aa'],
                                                 decision_func=(lambda s: s > 0)))
 
+        aad_prec.append(calculate_precision(Ln_predictions['aa-death'],
+                                            Lp_predictions['aa-death'],
+                                            decision_func=(lambda s: s > 0)))
+        aad_rec.append(calculate_recall(Ln_predictions['aa-death'],
+                                        Lp_predictions['aa-death'],
+                                        decision_func=(lambda s: s > 0)))
+
         leiden_prec.append(calculate_precision(Ln_predictions['comm'],
                                                Lp_predictions['comm'],
                                                decision_func=(lambda s: s > 0)))
         leiden_rec.append(calculate_recall(Ln_predictions['comm'],
                                            Lp_predictions['comm'],
                                            decision_func=(lambda s: s > 0)))
+
+        ld_prec.append(calculate_precision(Ln_predictions['comm-death'],
+                                           Lp_predictions['comm-death'],
+                                           decision_func=(lambda s: s > 0)))
+        ld_rec.append(calculate_recall(Ln_predictions['comm-death'],
+                                       Lp_predictions['comm-death'],
+                                       decision_func=(lambda s: s > 0)))
 
         random_prec.append(calculate_precision(Ln_predictions['baseline'],
                                                Lp_predictions['baseline'],
@@ -448,8 +511,11 @@ if __name__ == "__main__":
 
     # Print mean results with the standard deviation for all indices
     display_results('Preferential attachment index', pref_scores, pref_prec, pref_rec)
+    display_results('Preferential attachment index (using death info)', prefd_scores, prefd_prec, prefd_rec)
     display_results('Adamic-Adar index', adamic_adar_scores, adamic_adar_prec, adamic_adar_rec)
+    display_results('Adamic-Adar index (using death info)', aad_scores, aad_prec, aad_rec)
     display_results('Community index', leiden_scores, leiden_prec, leiden_rec)
+    display_results('Community index (using death info)', ld_scores, ld_prec, ld_rec)
     display_results('Random index', random_scores, random_prec, random_rec)
     display_results('ML (KNN)', knn_scores, knn_prec, knn_rec)
     display_results('ML (logistic reg.)', logr_scores, logr_prec, logr_rec)
