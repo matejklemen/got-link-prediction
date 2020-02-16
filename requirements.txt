@@ -4,3 +4,5 @@ sklearn
 leidenalg
 networkx
 python-igraph
+matplotlib
+node2vec
