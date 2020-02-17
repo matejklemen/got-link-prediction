@@ -1,6 +1,7 @@
 import networkx as nx
 import numpy as np
 from node2vec import Node2Vec
+import json
 
 if __name__ == "__main__":
     EMBEDDING_SIZE = 128
@@ -11,25 +12,23 @@ if __name__ == "__main__":
     # Vector that is assigned to unseen nodes
     UNK_EMBEDDING = np.random.random(EMBEDDING_SIZE)
 
+    num_unks = 0
+    with open("data/name_synonyms.json") as f:
+        name_map = json.load(f)
     G = nx.read_pajek("data/deaths.net")
     for n1, n2, _ in list(G.edges):
-        num_unk = 0
+        n1, n2 = name_map.get(n1, n1), name_map.get(n2, n2)
         try:
             n1_emb = model.wv[n1]
         except KeyError:
             n1_emb = UNK_EMBEDDING
-            num_unk += 1
 
         try:
             n2_emb = model.wv[n2]
         except KeyError:
             n2_emb = UNK_EMBEDDING
-            num_unk += 1
 
-        # TODO: same characters are written differently in `got-network.graphml`, need to remap names
-        #       (otherwise there are a lot of unknown nodes and we're essentially guessing randomly)
-        print(f"{n1}-{n2}-{num_unk}x UNK")
         link_emb = 0.5 * (n1_emb + n2_emb)
-        print(link_emb)
+        num_unks += int(np.all(link_emb == UNK_EMBEDDING))
 
-
+    print(f"{num_unks} links have a random embedding (out of {len(G.edges) * 2})")
