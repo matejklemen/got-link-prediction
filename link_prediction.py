@@ -1,15 +1,19 @@
 import leidenalg
+import json
 
 import networkx as nx
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 from copy import deepcopy
 from math import log
+from node2vec import Node2Vec
 from igraph import *
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
+from sklearn.manifold import TSNE
 
 np.random.seed(1337)
 
@@ -24,6 +28,26 @@ def display_results(name, auc_runs, prec_runs, rec_runs):
     print(f"[AUC] {np.mean(auc_runs):.3f} +- {np.std(auc_runs):.3f}", end=" | ")
     print(f"[prec.] {np.mean(prec_runs):.3f} +- {np.std(prec_runs):.3f}", end=" | ")
     print(f"[rec.] {np.mean(rec_runs):.3f} +- {np.std(rec_runs):.3f}")
+
+
+def analyze_vectors(char2vec, **settings):
+    # char2vec... dict, mapping show character to embedding
+    pca = TSNE(n_components=2)
+    characters = list(char2vec.keys())
+    vectors = np.array([char2vec[curr] for curr in char2vec.keys()])
+    plot_vectors = pca.fit_transform(vectors)
+
+    embedding_size = vectors[0].shape[0]
+    plt.figure(figsize=(10, 10))
+    plt.title(f"p={settings['p']}, q={settings['q']}, {embedding_size}-dim")
+    plt.plot(plot_vectors[:, 0], plot_vectors[:, 1], 'bo')
+    for i in range(len(characters)):
+        plt.text(plot_vectors[i, 0], plot_vectors[i, 1], characters[i])
+    plt.savefig(f"n2v_p{settings['p']}_q{settings['q']}_{embedding_size}.pdf")
+
+    print(plot_vectors)
+    exit(0)
+    pass
 
 
 def compute_index(links, index_func, G, G_igraph):
@@ -249,7 +273,26 @@ def extract_features(G, edge):
     return [G.out_degree(u), G.out_degree(v), u_pagerank, u_betweenness, u_community, v_pagerank, v_betweenness, v_community]
 
 
-def ml_approach(G, episode, models=None):
+def embed_link(link, embedder, oov_embedding):
+    """ Embed the link as the average embedding of the nodes making it up.
+    If a node has no embedding, `oov_embedding` (out of vocabulary) is assigned as its embedding.
+    """
+    u, v = link
+    n1, n2 = name_map.get(u, u), name_map.get(v, v)
+    try:
+        n1_emb = embedder.wv[n1]
+    except KeyError:
+        n1_emb = oov_embedding
+
+    try:
+        n2_emb = embedder.wv[n2]
+    except KeyError:
+        n2_emb = oov_embedding
+
+    return 0.5 * (n1_emb + n2_emb)
+
+
+def ml_approach(G, episode, models=None, embedder=None):
     """ How this works:
     [1. Prediction for positive samples]
     - set each episode in range [episode, 60] as threshold for getting examples
@@ -267,6 +310,8 @@ def ml_approach(G, episode, models=None):
     Note that multiple models can be evaluated on these examples in one run of function
     (to make sure that some model does not get a lucky break and get a higher score that way).
 
+    If `embedder` is provided, node embeddings will be used instead of manual feature extraction.
+
     Parameters:
         models: List of instances of models, on which we want to evaluate the approach.
                 For example, using logistic regression and SVM:
@@ -279,6 +324,11 @@ def ml_approach(G, episode, models=None):
     if models is None:
         model = KNeighborsClassifier()
         models = [model]
+
+    if embedder:
+        emb_size = embedder.vector_size
+        # vector that is assigned to unseen nodes
+        UNK_EMBEDDING = np.random.random(emb_size)
 
     Lp_preds = [[] for _ in models]
     Ln_preds = [[] for _ in models]
@@ -297,15 +347,26 @@ def ml_approach(G, episode, models=None):
         G_copy.remove_edges_from(Lp_after_ep)
 
         # Extract features for training and test examples
-        X_train = [extract_features(G_copy, curr_example) for curr_example in Lp_train]
-        y_train = [1 for _ in range(len(Lp_train))]
-        X_train.extend([extract_features(G_copy, curr_example) for curr_example in Ln_train])
-        y_train.extend([0 for _ in range(len(Ln_train))])
-        X_test = [extract_features(G_copy, curr_example) for curr_example in Lp_test]
+        if embedder:
+            pos_features_tr = [embed_link(curr_example, embedder, UNK_EMBEDDING) for curr_example in Lp_train]
+            neg_features_tr = [embed_link(curr_example, embedder, UNK_EMBEDDING) for curr_example in Ln_train]
+            pos_features_te = [embed_link(curr_example, embedder, UNK_EMBEDDING) for curr_example in Lp_test]
+        else:
+            pos_features_tr = [extract_features(G_copy, curr_example) for curr_example in Lp_train]
+            neg_features_tr = [extract_features(G_copy, curr_example) for curr_example in Ln_train]
+            pos_features_te = [extract_features(G_copy, curr_example) for curr_example in Lp_test]
+
+        X_train = pos_features_tr + neg_features_tr
+        y_train = [1] * len(pos_features_tr) + [0] * len(neg_features_tr)
+
+        X_test = pos_features_te
 
         # Make sure we have 2D arrays (could otherwise be problematic if there's only 1 test case)
         X_train = np.atleast_2d(X_train)
         X_test = np.atleast_2d(X_test)
+
+        # TODO: shuffle?
+        # ...
 
         for i, curr_model in enumerate(models):
             curr_model.fit(X_train, y_train)
@@ -321,11 +382,19 @@ def ml_approach(G, episode, models=None):
     Ln_test = neg_examples[len(Lp_train):]
 
     # Extract features for training and test examples
-    X_train = [extract_features(G_copy, curr_example) for curr_example in Lp_train]
-    y_train = [1 for _ in range(len(Lp_train))]
-    X_train.extend([extract_features(G_copy, curr_example) for curr_example in Ln_train])
-    y_train.extend([0 for _ in range(len(Ln_train))])
-    X_test = [extract_features(G_copy, curr_example) for curr_example in Ln_test]
+    if embedder:
+        pos_features_tr = [embed_link(curr_example, embedder, UNK_EMBEDDING) for curr_example in Lp_train]
+        neg_features_tr = [embed_link(curr_example, embedder, UNK_EMBEDDING) for curr_example in Ln_train]
+        neg_features_te = [embed_link(curr_example, embedder, UNK_EMBEDDING) for curr_example in Ln_test]
+    else:
+        pos_features_tr = [extract_features(G_copy, curr_example) for curr_example in Lp_train]
+        neg_features_tr = [extract_features(G_copy, curr_example) for curr_example in Ln_train]
+        neg_features_te = [extract_features(G_copy, curr_example) for curr_example in Ln_test]
+
+    X_train = pos_features_tr + neg_features_tr
+    y_train = [1] * len(pos_features_tr) + [0] * len(neg_features_tr)
+
+    X_test = neg_features_te
 
     for i, curr_model in enumerate(models):
         curr_model.fit(X_train, y_train)
@@ -342,8 +411,14 @@ def ml_approach(G, episode, models=None):
 
 
 if __name__ == "__main__":
+    EMBEDDING_SIZE = 128
     RUNS = 5
     G_orig = nx.read_pajek('./data/deaths.net')
+    got_social_network = nx.read_graphml("data/got-network.graphml")
+
+    # names are written differently in deaths network and social network
+    with open("data/name_synonyms.json") as f:
+        name_map = json.load(f)
 
     m = G_orig.number_of_edges()
     # AUC, precision and recall over several runs
@@ -357,6 +432,9 @@ if __name__ == "__main__":
     knn_scores, knn_prec, knn_rec = [], [], []
     logr_scores, logr_prec, logr_rec = [], [], []
     svm_scores, svm_prec, svm_rec = [], [], []
+    n2v_knn_scores, n2v_knn_prec, n2v_knn_rec = [], [], []
+    n2v_logr_scores, n2v_logr_prec, n2v_logr_rec = [], [], []
+    n2v_svm_scores, n2v_svm_prec, n2v_svm_rec = [], [], []
 
     print('Running calculations {} times ...'.format(RUNS))
     predict_from_episode = 30
@@ -365,8 +443,21 @@ if __name__ == "__main__":
         print('Run {}...'.format(run))
         G_full = deepcopy(G_orig)
 
-        Lp_predictions = {'pref': [], 'pref-death': [], 'aa': [], 'aa-death': [], 'comm': [], 'comm-death': [], 'baseline': []}
-        Ln_predictions = {'pref': [], 'pref-death': [], 'aa': [], 'aa-death': [], 'comm': [], 'comm-death': [], 'baseline': []}
+        # TODO: set parameters
+        n2v_model = Node2Vec(got_social_network, dimensions=EMBEDDING_SIZE, workers=4, p=1, q=1)
+        n2v_model = n2v_model.fit(window=10, min_count=1)
+
+        # learned_vectors = {c: n2v_model.wv[c] for c in got_social_network.nodes}
+        # analyze_vectors(learned_vectors, p=1, q=1)
+
+        Lp_predictions = {'pref': [], 'pref-death': [],
+                          'aa': [], 'aa-death': [],
+                          'comm': [], 'comm-death': [],
+                          'baseline': []}
+        Ln_predictions = {'pref': [], 'pref-death': [],
+                          'aa': [], 'aa-death': [],
+                          'comm': [], 'comm-death': [],
+                          'baseline': []}
 
         for episode in range(predict_from_episode, 60 + 1):
             G = deepcopy(G_full)
@@ -426,6 +517,9 @@ if __name__ == "__main__":
         (Lp_preds_knn, Ln_preds_knn), (Lp_preds_logr, Ln_preds_logr),  (Lp_preds_svm, Ln_preds_svm) = \
             ml_approach(G_copy, episode=predict_from_episode, models=[m1, m2, m3])
 
+        (Lp_preds_n2v_knn, Ln_preds_n2v_knn), (Lp_preds_n2v_logr, Ln_preds_n2v_logr), (Lp_preds_n2v_svm, Ln_preds_n2v_svm) = \
+            ml_approach(G_copy, episode=predict_from_episode, models=[m1, m2, m3], embedder=n2v_model)
+
         pref_scores.append(calculate_auc(
             Ln_predictions['pref'], Lp_predictions['pref']))
         prefd_scores.append(calculate_auc(
@@ -443,6 +537,9 @@ if __name__ == "__main__":
         knn_scores.append(calculate_auc(Ln_preds_knn, Lp_preds_knn))
         logr_scores.append(calculate_auc(Ln_preds_logr, Lp_preds_logr))
         svm_scores.append(calculate_auc(Ln_preds_svm, Lp_preds_svm))
+        n2v_knn_scores.append(calculate_auc(Ln_preds_n2v_knn, Lp_preds_n2v_knn))
+        n2v_logr_scores.append(calculate_auc(Ln_preds_n2v_logr, Lp_preds_n2v_logr))
+        n2v_svm_scores.append(calculate_auc(Ln_preds_n2v_svm, Lp_preds_n2v_svm))
 
         # Inverting classifier decisions with function `s < 0` to get valid AUC (>= 0.5)
         pref_prec.append(calculate_precision(Ln_predictions['pref'],
@@ -509,6 +606,21 @@ if __name__ == "__main__":
         svm_rec.append(calculate_recall(Ln_preds_svm, Lp_preds_svm,
                                         decision_func=(lambda s: s > 0.5)))
 
+        n2v_knn_prec.append(calculate_precision(Ln_preds_n2v_knn, Lp_preds_n2v_knn,
+                                                decision_func=(lambda s: s > 0.5)))
+        n2v_knn_rec.append(calculate_recall(Ln_preds_n2v_knn, Lp_preds_n2v_knn,
+                                            decision_func=(lambda s: s > 0.5)))
+
+        n2v_logr_prec.append(calculate_precision(Ln_preds_n2v_logr, Lp_preds_n2v_logr,
+                                                 decision_func=(lambda s: s > 0.5)))
+        n2v_logr_rec.append(calculate_recall(Ln_preds_n2v_logr, Lp_preds_n2v_logr,
+                                             decision_func=(lambda s: s > 0.5)))
+
+        n2v_svm_prec.append(calculate_precision(Ln_preds_n2v_svm, Lp_preds_n2v_svm,
+                                                decision_func=(lambda s: s > 0.5)))
+        n2v_svm_rec.append(calculate_recall(Ln_preds_n2v_svm, Lp_preds_n2v_svm,
+                                            decision_func=(lambda s: s > 0.5)))
+
     # Print mean results with the standard deviation for all indices
     display_results('Preferential attachment index', pref_scores, pref_prec, pref_rec)
     display_results('Preferential attachment index (using death info)', prefd_scores, prefd_prec, prefd_rec)
@@ -520,3 +632,6 @@ if __name__ == "__main__":
     display_results('ML (KNN)', knn_scores, knn_prec, knn_rec)
     display_results('ML (logistic reg.)', logr_scores, logr_prec, logr_rec)
     display_results('ML (SVM)', svm_scores, svm_prec, svm_rec)
+    display_results('node2vec + ML (KNN)', n2v_knn_scores, n2v_knn_prec, n2v_knn_rec)
+    display_results('node2vec + ML (logistic reg.)', n2v_logr_scores, n2v_logr_prec, n2v_logr_rec)
+    display_results('node2vec + ML (SVM)', n2v_svm_scores, n2v_svm_prec, n2v_svm_rec)
