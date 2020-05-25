@@ -289,7 +289,7 @@ def embed_link(link, embedder, oov_embedding):
     except KeyError:
         n2_emb = oov_embedding
 
-    return 0.5 * (n1_emb + n2_emb)
+    return np.concatenate((n1_emb, n2_emb))
 
 
 def ml_approach(G, episode, models=None, embedder=None):
@@ -411,7 +411,7 @@ def ml_approach(G, episode, models=None, embedder=None):
 
 
 if __name__ == "__main__":
-    EMBEDDING_SIZE = 128
+    EMBEDDING_SIZE = 16
     RUNS = 5
     G_orig = nx.read_pajek('./data/deaths.net')
     got_social_network = nx.read_graphml("data/got-network.graphml")
@@ -443,8 +443,7 @@ if __name__ == "__main__":
         print('Run {}...'.format(run))
         G_full = deepcopy(G_orig)
 
-        # TODO: set parameters
-        n2v_model = Node2Vec(got_social_network, dimensions=EMBEDDING_SIZE, workers=4, p=1, q=1)
+        n2v_model = Node2Vec(got_social_network, dimensions=EMBEDDING_SIZE, workers=4, p=2, q=0.5)
         n2v_model = n2v_model.fit(window=10, min_count=1)
 
         # learned_vectors = {c: n2v_model.wv[c] for c in got_social_network.nodes}
